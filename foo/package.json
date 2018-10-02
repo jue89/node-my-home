@@ -1,0 +1,6 @@
+{
+  "name": "foo.local",
+  "dependencies": {
+    "ftrm-basic": "0.0.0"
+  }
+}
