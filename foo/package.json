@@ -1,5 +1,5 @@
 {
-  "name": "foo.local",
+  "name": "foo",
   "dependencies": {
     "ftrm-basic": "0.0.0"
   }

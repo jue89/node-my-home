@@ -1,9 +1,16 @@
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
 const FTRM = require('ftrm');
 
-// This is boring since the defaults are handling everything ...
-FTRM();
+// Helper for loading the PKI stuff
+const getPem = (file) => fs.readFileSync(path.join(__dirname, '_pki', file));
 
-// Things that are happening here:
-// - Get the local hostname and look for a folder with the same name
-// - Load key and certificate from that folder
-// - Load all .js files from that folder
+// By default use the hostname as node name
+const node = process.env.NODE || os.hostname();
+FTRM({
+	ca: getPem(`my-home.crt`),
+	cert: getPem(`my-home.${node}.crt`),
+	key: getPem(`my-home.${node}.key`),
+	runDir: path.join(__dirname, node)
+});
