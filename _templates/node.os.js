@@ -16,7 +16,7 @@ module.exports = (ftrm) => {
 	const loadNames = ['avg1', 'avg5', 'avg15'];
 	components.push([require('ftrm-basic/inject-many'), {
 		output: loadNames.reduce((output, name) => {
-			output[name] = `node.os.${ftrm.node}.load.${name}`
+			output[name] = `node.${ftrm.node}.os.load.${name}`
 			return output;
 		}, {}),
 		inject: () => os.loadavg().reduce((load, value, n) => {
@@ -28,7 +28,7 @@ module.exports = (ftrm) => {
 
 	// Uptime
 	components.push([require('ftrm-basic/inject'), {
-		output: `node.os.${ftrm.node}.uptime`,
+		output: `node.${ftrm.node}.os.uptime`,
 		inject: () => os.uptime(),
 		interval: 60000 // every minute
 	}]);
@@ -39,12 +39,12 @@ module.exports = (ftrm) => {
 		const REmem = /^([a-zA-Z]+): *([0-9]+) kB$/;
 		components.push([require('ftrm-basic/inject-many'), {
 			output: {
-				'used': `node.os.${ftrm.node}.mem.used`,
-				'free': `node.os.${ftrm.node}.mem.free`,
-				'buffers': `node.os.${ftrm.node}.mem.buffers`,
-				'cached': `node.os.${ftrm.node}.mem.cached`,
-				'swapused': `node.os.${ftrm.node}.mem.swapused`,
-				'swapfree': `node.os.${ftrm.node}.mem.swapfree`
+				'used': `node.${ftrm.node}.os.mem.used`,
+				'free': `node.${ftrm.node}.os.mem.free`,
+				'buffers': `node.${ftrm.node}.os.mem.buffers`,
+				'cached': `node.${ftrm.node}.os.mem.cached`,
+				'swapused': `node.${ftrm.node}.os.mem.swapused`,
+				'swapfree': `node.${ftrm.node}.os.mem.swapfree`
 			},
 			inject: () => readProc('meminfo').then((file) => {
 				const mem = file.split('\n')
@@ -70,8 +70,8 @@ module.exports = (ftrm) => {
 		// The easy implementation for non-linux systems
 		components.push([require('ftrm-basic/inject-many'), {
 			output: {
-				'free': `node.os.${ftrm.node}.mem.free`,
-				'used': `node.os.${ftrm.node}.mem.used`
+				'free': `node.${ftrm.node}.os.mem.free`,
+				'used': `node.${ftrm.node}.os.mem.used`
 			},
 			inject: () => {
 				const total = os.totalmem();
