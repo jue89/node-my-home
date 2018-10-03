@@ -2,7 +2,12 @@ const os = require('os');
 const fs = require('fs');
 const path = require('path');
 
-const readProc = (file) => {};
+const readProc = async (file) => new Promise((resolve, reject) => {
+	fs.readFile(path.join('/proc', file), (err, data) => {
+		if (err) reject(err);
+		else resolve(data.toString());
+	});
+});;
 
 module.exports = (ftrm) => {
 	const components = [];
@@ -24,9 +29,38 @@ module.exports = (ftrm) => {
 	}]);
 
 	// Memory
-	if (os.platform === 'linux') {
+	if (os.platform() === 'linux') {
 		// Get detailed info from the /proc filesystem
-		// TODO
+		const REmem = /^([a-zA-Z]+): *([0-9]+) kB$/;
+		components.push([require('ftrm-basic/inject-many'), {
+			output: {
+				'used': `node.os.${ftrm.node}.mem.used`,
+				'free': `node.os.${ftrm.node}.mem.free`,
+				'buffers': `node.os.${ftrm.node}.mem.buffers`,
+				'cached': `node.os.${ftrm.node}.mem.cached`,
+				'swapused': `node.os.${ftrm.node}.mem.swapused`,
+				'swapfree': `node.os.${ftrm.node}.mem.swapfree`
+			},
+			inject: () => readProc('meminfo').then((file) => {
+				const mem = file.split('\n')
+					.map((line) => REmem.exec(line))
+					.filter((line) => line)
+					.reduce((data, line) => {
+						data[line[1]] = parseInt(line[2]) * 1024;
+						return data;
+					}, {});
+
+				return {
+					'used': mem.MemTotal - mem.MemFree,
+					'free': mem.MemFree,
+					'buffers': mem.Buffers,
+					'cached': mem.Cached,
+					'swapused': mem.SwapTotal - mem.SwapFree,
+					'swapfree': mem.SwapFree
+				};
+			}),
+			interval: 60000
+		}]);
 	} else {
 		// The easy implementation for non-linux systems
 		components.push([require('ftrm-basic/inject'), {
