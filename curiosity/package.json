@@ -1,7 +1,6 @@
 {
   "name": "curiosity",
   "dependencies": {
-    "ftrm-basic": "0.0.0",
     "tsfoo": "0.0.0"
   }
 }

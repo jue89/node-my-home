@@ -12,5 +12,6 @@ FTRM({
 	ca: getPem(`my-home.crt`),
 	cert: getPem(`my-home.${node}.crt`),
 	key: getPem(`my-home.${node}.key`),
-	autoRunDir: path.join(__dirname, node)
+	autoRunDir: path.join(__dirname, node),
+	node
 });
