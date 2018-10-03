@@ -9,13 +9,15 @@ module.exports = (ftrm) => {
 	}]);
 
 	// Memory
-	['heapTotal', 'heapUsed', 'external'].forEach((type) => {
-		components.push([require('ftrm-basic/inject'), {
-			output: `node.daemon.${ftrm.node}.mem.${type}`,
-			inject: () => process.memoryUsage()[type],
-			interval: 60000
-		}]);
-	});
+	components.push([require('ftrm-basic/inject-many'), {
+		output: {
+			'heapTotal': `node.daemon.${ftrm.node}.mem.heapTotal`,
+			'heapUsed': `node.daemon.${ftrm.node}.mem.heapUsed`,
+			'external': `node.daemon.${ftrm.node}.mem.external`
+		},
+		inject: () => process.memoryUsage(),
+		interval: 60000
+	}]);
 
 	return components;
 };

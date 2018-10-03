@@ -13,13 +13,18 @@ module.exports = (ftrm) => {
 	const components = [];
 
 	// Load average
-	['avg1', 'avg5', 'avg15'].forEach((topic, n) => {
-		components.push([require('ftrm-basic/inject'), {
-			output: `node.os.${ftrm.node}.load.${topic}`,
-			inject: () => os.loadavg()[n],
-			interval: 30000 // every 30 seconds
-		}]);
-	});
+	const loadNames = ['avg1', 'avg5', 'avg15'];
+	components.push([require('ftrm-basic/inject-many'), {
+		output: loadNames.reduce((output, name) => {
+			output[name] = `node.os.${ftrm.node}.load.${name}`
+			return output;
+		}, {}),
+		inject: () => os.loadavg().reduce((load, value, n) => {
+			load[loadNames[n]] = value;
+			return load;
+		}, {}),
+		interval: 30000
+	}]);
 
 	// Uptime
 	components.push([require('ftrm-basic/inject'), {
@@ -63,15 +68,17 @@ module.exports = (ftrm) => {
 		}]);
 	} else {
 		// The easy implementation for non-linux systems
-		components.push([require('ftrm-basic/inject'), {
-			output: `node.os.${ftrm.node}.mem.free`,
-			inject: () => os.freemem(),
-			interval: 60000 // every minute
-		}]);
-		components.push([require('ftrm-basic/inject'), {
-			output: `node.os.${ftrm.node}.mem.used`,
-			inject: () => os.totalmem() - os.freemem(),
-			interval: 60000 // every minute
+		components.push([require('ftrm-basic/inject-many'), {
+			output: {
+				'free': `node.os.${ftrm.node}.mem.free`,
+				'used': `node.os.${ftrm.node}.mem.used`
+			},
+			inject: () => {
+				const total = os.totalmem();
+				const free = os.freemem();
+				return {free, used: total - free};
+			},
+			interval: 60000
 		}]);
 	}
 
