@@ -13,7 +13,6 @@ p.once('value', (initValue) => {
 	const denoise = new Median(5, initValue);
 	const baseLine = new Median(601, initValue);
 	
-	let lastPulse;
 	let lastRed = false;
 	let red = false;
 
@@ -25,32 +24,42 @@ p.once('value', (initValue) => {
 		if (diff > 80) red = true;
 		if (diff < 50) red = false;
 
-		if (!lastRed && red) {
-			// Emit consumed energy
-			electricityMeter.emit('consumed', WHPERPULSE);
-
-			// Emit current power consumption
-			const now = Date.now();
-			if (lastPulse) {
-				const diff = now - lastPulse;
-				const pwr = 3600000 * WHPERPULSE / diff;
-				electricityMeter.emit('power', pwr);
-			}
-			lastPulse = now
-		}
+		if (!lastRed && red) electricityMeter.emit('consumed', WHPERPULSE);
 
 		lastRed = red;
 	});
 });
 
+// Calc power
+let lastPulse;
+electricityMeter.on('consumed', (energy) => {
+	const now = Date.now();
+	if (lastPulse) {
+		const diff = now - lastPulse;
+		const pwr = 3600000 * energy / diff;
+		electricityMeter.emit('power', pwr);
+	}
+	lastPulse = now;
+});
+
+// Calc total energy
+const localStorage = require('../_lib/localStorage.js');
+setInterval(() => localStorage.save(), 30 * 60 * 1000);
+process.on('SIGINT', () => localStorage.save());
+if (!localStorage.totalEnergy) localStorage.totalEnergy = 0;
+electricityMeter.on('consumed', (energy) => {
+	localStorage.totalEnergy += energy;
+	electricityMeter.emit('totalEnergy', localStorage.totalEnergy);
+});
+
 // Log into syslog
-electricityMeter.on('consumed', (vol) => console.log(`Consumed ${vol}Wh`));
 electricityMeter.on('power', (pwr) => console.log(`Power consumption ${pwr}W`));
 
 // Expose consumption onto the bus
 module.exports = [require('ftrm-basic/from-event'), {
 	output: {
 		'consumed': 'home.haj.atf8.sj.electricitymeter.energy_Wh',
+		'totalEnergy': 'home.haj.atf8.sj.electricitymeter.energyTotal_Wh',
 		'power': 'home.haj.atf8.sj.electricitymeter.power_W'
 	},
 	bus: electricityMeter
