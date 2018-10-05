@@ -22,11 +22,24 @@ p.on('value', (value) => {
 	lastRed = red;
 });
 
+// Calc total volume
+const localStorage = require('../_lib/localStorage.js');
+setInterval(() => localStorage.save(), 30 * 60 * 1000);
+process.on('SIGINT', () => localStorage.save());
+if (!localStorage.totalVolume) localStorage.totalVolume = 0;
+gasMeter.on('consumed', (vol) => {
+	localStorage.totalVolume += vol;
+	gasMeter.emit('totalVolume', localStorage.totalVolume);
+});
+
 // Log into syslog
 gasMeter.on('consumed', (vol) => console.log(`Consumed ${vol}L`));
 
 // Expose consumption onto the bus
 module.exports = [require('ftrm-basic/from-event'), {
-	output: { 'consumed': 'home.haj.atf8.sj.gasmeter.volume_L' },
+	output: {
+		'consumed': 'home.haj.atf8.sj.gasmeter.volume_L',
+		'totalVolume': 'home.haj.atf8.sj.gasmeter.volumeTotal_L'
+	},
 	bus: gasMeter
 }];
