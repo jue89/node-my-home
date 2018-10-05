@@ -7,7 +7,7 @@ const LITERPERPULSE = 10;
 const gasMeter = new EventEmitter();
 
 // Search for the red dot
-const p = new Poll('/sys/bus/iio/devices/iio:device0/in_voltage0_raw', 50);
+const p = new Poll('/sys/bus/iio/devices/iio:device1/in_voltage0_raw', 50);
 const base = 2500;
 let red = false;
 let lastRed = false;
@@ -27,6 +27,6 @@ gasMeter.on('consumed', (vol) => console.log(`Consumed ${vol}L`));
 
 // Expose consumption onto the bus
 module.exports = [require('ftrm-basic/from-event'), {
-	output: { 'consumed': 'home.haj.atf8.sj.gasmeter.literConsumed' },
+	output: { 'consumed': 'home.haj.atf8.sj.gasmeter.volume_L' },
 	bus: gasMeter
 }];
