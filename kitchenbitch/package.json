@@ -1,4 +1,6 @@
 {
   "name": "kitchenbitch",
-  "dependencies": {}
+  "dependencies": {
+    "ftrm-sensors": "0.0.0"
+  }
 }
