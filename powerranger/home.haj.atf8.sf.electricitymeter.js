@@ -46,6 +46,7 @@ electricityMeter.on('consumed', (energy) => {
 const localStorage = require('../_lib/localStorage.js');
 setInterval(() => localStorage.save(), 30 * 60 * 1000);
 process.on('SIGINT', () => localStorage.save());
+process.on('SIGTERM', () => localStorage.save());
 if (!localStorage.totalEnergy) localStorage.totalEnergy = 0;
 electricityMeter.on('consumed', (energy) => {
 	localStorage.totalEnergy += energy;
@@ -56,11 +57,19 @@ electricityMeter.on('consumed', (energy) => {
 electricityMeter.on('power', (pwr) => console.log(`Power consumption ${pwr}W`));
 
 // Expose consumption onto the bus
-module.exports = [require('ftrm-basic/from-event'), {
+module.exports = [[require('ftrm-basic/from-event'), {
 	output: {
 		'consumed': 'home.haj.atf8.sj.electricitymeter.energy_Wh',
 		'totalEnergy': 'home.haj.atf8.sj.electricitymeter.energyTotal_Wh',
 		'power': 'home.haj.atf8.sj.electricitymeter.power_W'
 	},
 	bus: electricityMeter
-}];
+}], [require('ftrm-basic/sliding-window'), {
+	input: 'home.haj.atf8.sj.electricitymeter.energy_Wh',
+	output: 'home.haj.atf8.sj.electricitymeter.energy24h_Wh',
+	includeValue: (age) => age < 86400000, // 1 day
+	calcOutput: (window) => window.reduce((sum, v) => {
+		sum += v;
+		return sum;
+	}, 0)
+}]];
