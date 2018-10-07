@@ -24,8 +24,6 @@ p.on('value', (value) => {
 
 // Calc total volume
 const localStorage = require('../_lib/localStorage.js');
-setInterval(() => localStorage.save(), 30 * 60 * 1000);
-process.on('SIGINT', () => localStorage.save());
 if (!localStorage.totalVolume) localStorage.totalVolume = 0;
 gasMeter.on('consumed', (vol) => {
 	localStorage.totalVolume += vol;

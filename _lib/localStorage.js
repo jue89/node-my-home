@@ -16,3 +16,6 @@ Object.setPrototypeOf(module.exports, {
 	}
 });
 
+setInterval(() => module.exports.save(), 30 * 60 * 1000);
+process.on('SIGINT', () => module.exports.save());
+process.on('SIGTERM', () => module.exports.save());
