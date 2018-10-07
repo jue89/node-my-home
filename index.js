@@ -14,4 +14,7 @@ FTRM({
 	key: getPem(`my-home.${node}.key`),
 	autoRunDir: path.join(__dirname, node),
 	node
-});
+}).then((ftrm) => {
+	ftrm._bus.realm.on('foundNeigh', (n) => console.log('+ Node ' + n.info.subject.commonName));
+	ftrm._bus.realm.on('lostNeigh', (n) => console.log('- Node ' + n.info.subject.commonName));
+});;
