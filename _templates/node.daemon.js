@@ -5,7 +5,7 @@ module.exports = (ftrm) => {
 	components.push([require('ftrm-basic/inject'), {
 		output: `node.${ftrm.node}.daemon.uptime`,
 		inject: () => process.uptime(),
-		interval: 60000
+		interval: 5 * 60 * 1000
 	}]);
 
 	// Memory
@@ -16,7 +16,7 @@ module.exports = (ftrm) => {
 			'external': `node.${ftrm.node}.daemon.mem.external`
 		},
 		inject: () => process.memoryUsage(),
-		interval: 60000
+		interval: 5 * 60 * 1000
 	}]);
 
 	return components;

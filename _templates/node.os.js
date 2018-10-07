@@ -23,14 +23,14 @@ module.exports = (ftrm) => {
 			load[loadNames[n]] = value;
 			return load;
 		}, {}),
-		interval: 30000
+		interval: 1 * 60 * 1000
 	}]);
 
 	// Uptime
 	components.push([require('ftrm-basic/inject'), {
 		output: `node.${ftrm.node}.os.uptime`,
 		inject: () => os.uptime(),
-		interval: 60000 // every minute
+		interval: 5 * 60 * 1000
 	}]);
 
 	// Memory
@@ -64,7 +64,7 @@ module.exports = (ftrm) => {
 					'swapfree': mem.SwapFree
 				};
 			}),
-			interval: 60000
+			interval: 5 * 60 * 1000
 		}]);
 	} else {
 		// The easy implementation for non-linux systems
@@ -78,7 +78,7 @@ module.exports = (ftrm) => {
 				const free = os.freemem();
 				return {free, used: total - free};
 			},
-			interval: 60000
+			interval: 5 * 60 * 1000
 		}]);
 	}
 
