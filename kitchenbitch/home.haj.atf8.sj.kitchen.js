@@ -1,3 +1,5 @@
+const getFromSchedule = require('../_lib/schedule.js')
+
 module.exports = [
 	// Sensors:
 	// - room temperature
@@ -48,6 +50,19 @@ module.exports = [
 		default: false
 	}],
 
+	// Setpoint:
+	// - schedule
+	[require('ftrm-basic/inject'), {
+		output: 'home.haj.atf8.kitchen.room.desiredTemperature_degC'
+		interval: 60000 * 5,
+		inject: () => getFromSchedule(new Date(), [
+			[08, 15],
+			[10, 17],
+			[21, 17],
+			[23, 15]
+		])
+	}],
+
 	// Controllers:
 	// - room temperature
 	[require('ftrm-ctrl/pid'), {
@@ -58,7 +73,7 @@ module.exports = [
 			'u_min': {value: 0},
 			'u_max': {value: 30},
 			'actualValue': {pipe: 'home.haj.atf8.sj.kitchen.room.actualTemperature_degC'},
-			'desiredValue': {value: 18}
+			'desiredValue': {pipe: 'home.haj.atf8.kitchen.room.desiredTemperature_degC'}
 		},
 		output: {
 			'controlValue': {pipe: 'home.haj.atf8.sj.kitchen.radiator.desiredDiffTemperature_degC'}
