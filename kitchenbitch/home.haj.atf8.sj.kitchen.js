@@ -53,7 +53,7 @@ module.exports = [
 	// Setpoint:
 	// - schedule
 	[require('ftrm-basic/inject'), {
-		output: 'home.haj.atf8.kitchen.room.desiredTemperature_degC'
+		output: 'home.haj.atf8.kitchen.room.desiredTemperature_degC',
 		interval: 60000 * 5,
 		inject: () => getFromSchedule(new Date(), [
 			[08, 15],

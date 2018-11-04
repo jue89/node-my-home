@@ -7,7 +7,7 @@ module.exports = function (hour, schedule) {
 	});
 
 	// Current hour
-	if (hour instanceof Date) hour = date.getHours() + date.getMinutes() / 60;
+	if (hour instanceof Date) hour = hour.getHours() + hour.getMinutes() / 60;
 
 	// Find the right interval
 	let i2;
