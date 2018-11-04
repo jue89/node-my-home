@@ -1,6 +1,8 @@
 {
   "name": "kitchenbitch",
   "dependencies": {
-    "ftrm-sensors": "0.0.0"
+    "ftrm-sensors": "0.0.0",
+    "ftrm-gpio": "0.0.0",
+    "ftrm-ctrl": "git+https://github.com/Footurama/ftrm-ctrl.git#93e00b0c3eb91476caf06a6f920b0aee84b21e89"
   }
 }
