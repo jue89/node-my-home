@@ -16,6 +16,10 @@ module.exports = [
 		channel: 'in_humidityrelative_input',
 		interval: 10000
 	}],
+	[require('ftrm-homekit')('HumiditySensor'), {
+		input: [{name: 'CurrentRelativeHumidity', pipe: 'home.haj.atf8.sj.kitchen.room.actualHumidity_relPercent'}],
+		displayName: 'Humidity'
+	}],
 	// - radiator temperature
 	[require('ftrm-sensors/w1therm'), {
 		output: 'home.haj.atf8.sj.kitchen.radiator.actualTemperature_degC',
