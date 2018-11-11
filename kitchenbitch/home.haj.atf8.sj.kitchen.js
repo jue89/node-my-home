@@ -51,9 +51,40 @@ module.exports = [
 	}],
 
 	// Setpoint:
+	// - select
+	[require('ftrm-basic/select'), {
+		input: [
+			{pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.window'},
+			{pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.homekit', expire: 3 * 60 * 60 * 1000},
+			{pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.schedule'},
+			{value: 14}
+		],
+		output: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC',
+		weight: 'prio'
+	}],
+	// - window
+	[require('ftrm-basic/map'), {
+		input: 'home.haj.atf8.sj.kitchen.window.open',
+		output: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.window',
+		map: (open) => open ? 10 : undefined
+	}],
+	// - homekit
+	[require('ftrm-homekit')('Thermostat'), {
+		input: [
+			{name: 'CurrentTemperature', pipe: 'home.haj.atf8.sj.kitchen.room.actualTemperature_degC'},
+			{name: 'CurrentHeatingCoolingState', pipe: 'home.haj.atf8.sj.kitchen.radiator.open'},
+			{name: 'TargetTemperature', pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC'}
+		],
+		output: [
+			{name: 'TargetTemperature', pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.homekit'},
+			{name: 'TargetHeatingCoolingState', value: 3},
+			{name: 'TemperatureDisplayUnits', value: 0}
+		],
+		displayName: 'Heating'
+	}],
 	// - schedule
 	[require('ftrm-basic/inject'), {
-		output: 'home.haj.atf8.kitchen.room.desiredTemperature_degC',
+		output: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.schedule',
 		interval: 60000 * 5,
 		inject: () => getFromSchedule(new Date(), [
 			[08, 15],
@@ -73,7 +104,7 @@ module.exports = [
 			'u_min': {value: 0},
 			'u_max': {value: 30},
 			'actualValue': {pipe: 'home.haj.atf8.sj.kitchen.room.actualTemperature_degC'},
-			'desiredValue': {pipe: 'home.haj.atf8.kitchen.room.desiredTemperature_degC'}
+			'desiredValue': {pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC'}
 		},
 		output: {
 			'controlValue': {pipe: 'home.haj.atf8.sj.kitchen.radiator.desiredDiffTemperature_degC'}
