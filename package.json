@@ -4,7 +4,7 @@
   "description": "My home automation stuff",
   "main": "index.js",
   "dependencies": {
-    "ftrm": "git+https://github.com/Footurama/ftrm.git#49cc56e602bfa717da734480348293477144cc9d",
+    "ftrm": "git+https://github.com/Footurama/ftrm.git#07bc9aa1ea12df8cedca16ee117a533463e9a222",
     "ftrm-basic": "git+https://github.com/Footurama/ftrm-basic.git#bb158e0b5f1ca969f8890fc735f38990d25e00bf"
   },
   "devDependencies": {},

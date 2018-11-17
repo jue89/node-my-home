@@ -1,6 +1,7 @@
 {
   "name": "curiosity",
   "dependencies": {
-    "tsfoo": "0.0.0"
+    "tsfoo": "0.0.0",
+    "ftrm-tracking": "git+https://github.com/Footurama/ftrm-tracking.git#e64712e016b0d190d9bd34773790ca8fd26180c9"
   }
 }
