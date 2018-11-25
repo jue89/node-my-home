@@ -1,4 +1,4 @@
-const getFromSchedule = require('../_lib/schedule.js')
+const linterpol = require('linterpol');
 
 module.exports = [
 	// Sensors:
@@ -87,15 +87,24 @@ module.exports = [
 		displayName: 'Heating'
 	}],
 	// - schedule
-	[require('ftrm-basic/inject'), {
+	[require('ftrm-basic/scheduler'), {
+		input: [
+			'user.jue.present.atf8',
+			'user.steffen.present.atf8'
+		],
 		output: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.schedule',
 		interval: 60000 * 5,
-		inject: () => getFromSchedule(new Date(), [
-			[08, 15],
-			[10, 17],
-			[21, 17],
-			[23, 15]
-		])
+		schedule: (now, jue, steffen) => {
+			const tempNight = (jue || steffen) ? 15 : 12;
+			const tempDay = (jue || steffen) ? 17 : 15;
+			const time = now.m / 60 + now.h;
+			return linterpol(time, [
+				[08, tempNight],
+				[10, tempDay],
+				[21, tempDay],
+				[23, tempNight]
+			], 24);
+		}
 	}],
 
 	// Controllers:
