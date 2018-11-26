@@ -1,0 +1,10 @@
+{
+  "name": "entropy",
+  "dependencies": {
+    "ftrm-sensors": "0.0.0",
+    "ftrm-homekit": "0.0.0",
+    "ftrm-gpio": "git+https://github.com/Footurama/ftrm-gpio.git#c963b2f7d6d86a3e9f52e7d05a40a25dd829d3a1",
+    "ftrm-ctrl": "git+https://github.com/Footurama/ftrm-ctrl.git#8b79f1141e04fc569c55ee02b343dea51363093d",
+    "linterpol": "^1.0.0"
+  }
+}
