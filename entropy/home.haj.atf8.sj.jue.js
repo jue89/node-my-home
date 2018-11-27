@@ -90,7 +90,7 @@ module.exports = [
 			const time = now.m / 60 + now.h;
 
 			// Get temperatues
-			const tempDay = linterpol(time, [
+			const tempDay = linterpol(distance, [
 				[  100, 18],
 				[ 4100, 16],
 				[80000, 12]
