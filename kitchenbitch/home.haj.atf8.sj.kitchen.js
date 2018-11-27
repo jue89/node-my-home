@@ -90,11 +90,13 @@ module.exports = [
 	[require('ftrm-basic/scheduler'), {
 		input: [
 			'user.jue.present.atf8',
-			'user.steffen.present.atf8'
+			'user.steffen.present.atf8',
+			'home.haj.atf8.sj.kitchen.airplay.playing'
 		],
 		output: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.schedule',
 		interval: 60000 * 5,
-		schedule: (now, jue, steffen) => {
+		schedule: (now, jue, steffen, airplay) => {
+			if (airplay) return 18;
 			const tempNight = (jue || steffen) ? 15 : 12;
 			const tempDay = (jue || steffen) ? 17 : 15;
 			const time = now.m / 60 + now.h;
