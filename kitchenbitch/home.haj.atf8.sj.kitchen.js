@@ -41,7 +41,7 @@ module.exports = [
 	}],
 	// - window contact
 	[require('ftrm-gpio/in'), {
-		output: 'home.haj.atf8.sj.kitchen.window.open',
+		output: [{pipe: 'home.haj.atf8.sj.kitchen.window.open', throttle: 5 * 60 * 1000}],
 		gpio: 27,
 		interval: 5 * 60 * 1000
 	}],
