@@ -98,7 +98,7 @@ module.exports = [
 			const tempNight = present ? 15 : 12;
 
 			// Build schedule:
-			const schedule = (now.dow >= 6) ? [
+			const schedule = (now.dayofweek >= 6) ? [
 				// Weekend
 				[ 9, tempNight],
 				[11, tempDay],
