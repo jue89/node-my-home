@@ -46,7 +46,7 @@ module.exports = [
 		interval: 5 * 60 * 1000
 	}],
 	[require('ftrm-homekit')('ContactSensor'), {
-		input: {'ContactSensorState': 'home.haj.atf8.sj.jue.window.open'},
+		input: {'ContactSensorState': 'home.haj.atf8.sj.kitchen.window.open'},
 		displayName: 'Window'
 	}],
 
