@@ -26,19 +26,6 @@ module.exports = [
 		sensorSerial: '10-000802bf5587',
 		interval: 10000
 	}],
-	// - radiator diff temperature
-	[require('ftrm-basic/combine'), {
-		input: {
-			'radiator': 'home.haj.atf8.sj.kitchen.radiator.actualTemperature_degC',
-			'room': 'home.haj.atf8.sj.kitchen.room.actualTemperature_degC'
-		},
-		output: 'home.haj.atf8.sj.kitchen.radiator.actualDiffTemperature_degC',
-		combine: (radiator, room) => {
-			let diff = radiator - room;
-			if (diff < 0) diff = 0;
-			return diff;
-		}
-	}],
 	// - window contact
 	[require('ftrm-gpio/in'), {
 		output: [{pipe: 'home.haj.atf8.sj.kitchen.window.open', throttle: 5 * 60 * 1000}],
@@ -121,7 +108,7 @@ module.exports = [
 			'k_i': {value: 0.02},
 			'k_d': {value: 0},
 			'u_min': {value: 0},
-			'u_max': {value: 30},
+			'u_max': {value: 30, pipe: 'home.haj.atf8.sj.maxDesiredDiffTemperature_degC'},
 			'actualValue': {pipe: 'home.haj.atf8.sj.kitchen.room.actualTemperature_degC'},
 			'desiredValue': {pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC'}
 		},
@@ -129,12 +116,24 @@ module.exports = [
 			'controlValue': {pipe: 'home.haj.atf8.sj.kitchen.radiator.desiredDiffTemperature_degC'}
 		}
 	}],
+	[require('ftrm-basic/combine'), {
+		input: {
+			'actual': 'home.haj.atf8.sj.kitchen.radiator.actualTemperature_degC',
+			'desiredDiff': 'home.haj.atf8.sj.kitchen.radiator.desiredDiffTemperature_degC'
+		},
+		output: 'home.haj.atf8.sj.kitchen.radiator.desiredTemperature_degC',
+		combine: (radiator, room) => {
+			let diff = radiator - room;
+			if (diff < 0) diff = 0;
+			return diff;
+		}
+	],
 	// - radiator temperature
 	[require('ftrm-ctrl/bangbang'), {
 		input: {
 			'hysteresis': {value: 1},
-			'actualValue': {pipe: 'home.haj.atf8.sj.kitchen.radiator.actualDiffTemperature_degC'},
-			'desiredValue': {pipe: 'home.haj.atf8.sj.kitchen.radiator.desiredDiffTemperature_degC'}
+			'actualValue': {pipe: 'home.haj.atf8.sj.kitchen.radiator.actualTemperature_degC'},
+			'desiredValue': {pipe: 'home.haj.atf8.sj.kitchen.radiator.desiredTemperature_degC'}
 		},
 		output: {
 			'controlValue': {pipe: 'home.haj.atf8.sj.kitchen.radiator.open'}
