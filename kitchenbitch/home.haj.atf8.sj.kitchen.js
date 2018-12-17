@@ -122,12 +122,13 @@ module.exports = [
 			'desiredDiff': 'home.haj.atf8.sj.kitchen.radiator.desiredDiffTemperature_degC'
 		},
 		output: 'home.haj.atf8.sj.kitchen.radiator.desiredTemperature_degC',
-		combine: (radiator, room) => {
-			let diff = radiator - room;
-			if (diff < 0) diff = 0;
-			return diff;
+		combine: (actual, diff) => {
+			// If the controller requests no diff temperatur,
+			// make sure the radiator is turned off -> 6
+			if (diff === 0) return 6;
+			else return actual + diff;
 		}
-	],
+	}],
 	// - radiator temperature
 	[require('ftrm-ctrl/bangbang'), {
 		input: {
