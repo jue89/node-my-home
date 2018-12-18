@@ -128,7 +128,7 @@ module.exports = [
 	}],
 	[require('ftrm-basic/combine'), {
 		input: {
-			'actual': 'home.haj.atf8.sj.jue.radiator.actualTemperature_degC',
+			'actual': 'home.haj.atf8.sj.jue.room.actualTemperature_degC',
 			'desiredDiff': 'home.haj.atf8.sj.jue.radiator.desiredDiffTemperature_degC'
 		},
 		output: 'home.haj.atf8.sj.jue.radiator.desiredTemperature_degC',
