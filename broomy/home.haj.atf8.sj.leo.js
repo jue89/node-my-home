@@ -51,7 +51,7 @@ module.exports = [
 		output: 'home.haj.atf8.sj.leo.room.desiredTemperature_degC.window',
 		map: (open) => open ? 10 : undefined
 	}],
-	// - homekit
+	// - manual
 	[require('ftrm-homekit')('Thermostat'), {
 		input: [
 			{name: 'CurrentTemperature', pipe: 'home.haj.atf8.sj.leo.room.actualTemperature_degC'},
@@ -64,6 +64,19 @@ module.exports = [
 			{name: 'TemperatureDisplayUnits', value: 0}
 		],
 		displayName: 'Heating'
+	}],
+	[require('ftrm-http/server'), {
+		input: [
+			{name: 'radiator/actualTemperature_degC', pipe: 'home.haj.atf8.sj.leo.radiator.actualTemperature_degC'},
+			{name: 'radiator/open', pipe: 'home.haj.atf8.sj.leo.radiator.open'},
+			{name: 'room/actualTemperature_degC', pipe: 'home.haj.atf8.sj.leo.room.actualTemperature_degC'},
+			{name: 'room/desiredTemperature_degC', pipe: 'home.haj.atf8.sj.leo.room.desiredTemperature_degC'}
+		],
+		output: [
+			{name: 'room/desiredTemperature_degC', pipe: 'home.haj.atf8.sj.leo.room.desiredTemperature_degC.manual', convert: 'float'}
+		],
+		port: 8080,
+		index: true
 	}],
 	// - schedule
 	[require('ftrm-basic/scheduler'), {
