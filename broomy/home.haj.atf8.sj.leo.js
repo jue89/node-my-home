@@ -80,15 +80,15 @@ module.exports = [
 	}],
 	// - schedule
 	[require('ftrm-basic/scheduler'), {
-		input: [],
+		input: ['user.leo.present.atf8'],
 		output: 'home.haj.atf8.sj.leo.room.desiredTemperature_degC.schedule',
 		interval: 60000 * 5,
-		schedule: (now, present, pc) => {
+		schedule: (now, present) => {
 			const time = now.m / 60 + now.h;
 
 			// Get temperatues
-			const tempDay = 18;
-			const tempNight = 17;
+			const tempDay = present ? 18 : 16;
+			const tempNight = present ? 17 : 15;
 
 			// Build schedule:
 			const schedule = [
