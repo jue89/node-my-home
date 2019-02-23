@@ -3,6 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const FTRM = require('ftrm');
 
+// Dry run
+const dryRun = process.argv[2] === '--check';
+
 // Helper for loading the PKI stuff
 const getPem = (file) => fs.readFileSync(path.join(__dirname, '_pki', file));
 
@@ -13,8 +16,11 @@ FTRM({
 	cert: getPem(`my-home.${node}.crt`),
 	key: getPem(`my-home.${node}.key`),
 	autoRunDir: path.join(__dirname, node),
-	node
+	node,
+	dryRun
 }).then((ftrm) => {
-	ftrm._bus.realm.on('foundNeigh', (n) => console.log('+ Node ' + n.info.subject.commonName));
-	ftrm._bus.realm.on('lostNeigh', (n) => console.log('- Node ' + n.info.subject.commonName));
+	if (ftrm._bus.hood) {
+		ftrm._bus.hood.on('foundNeigh', (n) => console.log('+ Node ' + n.info.subject.commonName));
+		ftrm._bus.hood.on('lostNeigh', (n) => console.log('- Node ' + n.info.subject.commonName));
+	}
 });;
