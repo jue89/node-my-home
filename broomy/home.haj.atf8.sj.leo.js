@@ -106,7 +106,7 @@ module.exports = [
 	// - room temperature
 	[require('ftrm-ctrl/pid'), {
 		input: {
-			'k_p': {value: 8},
+			'k_p': {value: 4},
 			'k_i': {value: 0.02},
 			'k_d': {value: 0},
 			'u_min': {value: 0},
