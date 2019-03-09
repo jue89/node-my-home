@@ -70,25 +70,25 @@ module.exports = [
 		input: [
 			'user.steffen.present.atf8',
 			'user.steffen.devices.pc.online',
-			'user.steffen.devices.laptop.online'
+			'user.steffen.devices.laptop-wifi.online',
+			'user.steffen.devices.laptop-wired.online'
 		],
 		output: 'home.haj.atf8.sj.steffen.room.desiredTemperature_degC.schedule',
 		interval: 60000 * 5,
-		schedule: (now, present, pc, laptop) => {
+		schedule: (now, present, pc, laptopWifi, laptopWired) => {
 			// Don't turn the heating down when sitting in front of the pc
-			if (present && pc) return 20;
+			if (present && (pc || laptopWifi || laptopWired)) return 20;
 
 			const time = now.m / 60 + now.h;
 
 			// Get temperatues
 			const tempDay = present ? 19 : 17
-			const tempNight = present ? 16 : 12;
+			const tempNight = present ? 16 : 13;
 
 			// Build schedule:
 			const schedule = [
-				// Weekend
-				[ 9, tempNight],
-				[11, tempDay],
+				[ 7, tempNight],
+				[ 9, tempDay],
 				[ 1, tempDay],
 				[ 3, tempNight],
 			];
