@@ -81,6 +81,7 @@ module.exports = [
 			const time = now.m / 60 + now.h;
 
 			// Get temperatues
+			if (present) distance = 0;
 			const tempDay = linterpol(distance, [
 				[  100, 18],
 				[ 4100, 16],
