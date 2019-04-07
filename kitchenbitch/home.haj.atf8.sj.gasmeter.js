@@ -35,9 +35,9 @@ gasMeter.on('consumed', (vol) => console.log(`Consumed ${vol}L`));
 
 // Expose consumption onto the bus
 module.exports = [require('ftrm-basic/from-event'), {
-	output: {
-		'consumed': 'home.haj.atf8.sj.gasmeter.volume_L',
-		'totalVolume': 'home.haj.atf8.sj.gasmeter.volumeTotal_L'
-	},
+	output: [
+		{name: 'consumed', pipe: 'home.haj.atf8.sj.gasmeter.volume_L'},
+		{name: 'totalVolume', pipe: 'home.haj.atf8.sj.gasmeter.volumeTotal_L', retransmit: 5 * 60 * 1000}
+	],
 	bus: gasMeter
 }];
