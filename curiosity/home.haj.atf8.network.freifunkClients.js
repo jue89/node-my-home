@@ -13,7 +13,7 @@ function normalizeMac(mac) {
 const REn = /vx_mesh_lan[\t ]+([0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2})/;
 const REtg = / \* *([0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}).*\[.W..\].*([0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2})/;
 async function getLocalMacs() {
-	const data = await exec('ssh root@2a02:790:ff:919:5054:ff:fe9f:7fad "batctl n && batctl tg"');
+	const data = await exec('ssh root@2a02:790:ff:219:5054:ff:fe9f:7fad "batctl n && batctl tg"');
 	const neigh = data
 		.map((l) => REn.exec(l))
 		.filter((re) => re)
