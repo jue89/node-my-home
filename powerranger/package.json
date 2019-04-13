@@ -1,4 +1,7 @@
 {
   "name": "powerranger",
-  "dependencies": {}
+  "dependencies": {
+    "ftrm-sensors": "0.0.0",
+    "ftrm-homekit": "git+https://github.com/Footurama/ftrm-homekit.git#c64fe512c1544fe3cd2e37814c27a0539aa0f92c"
+  }
 }
