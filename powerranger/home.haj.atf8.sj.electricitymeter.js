@@ -45,7 +45,6 @@ electricityMeter.on('consumed', (energy) => {
 // Calc total energy
 const localStorage = require('../_lib/localStorage.js');
 if (!localStorage.totalEnergy) localStorage.totalEnergy = 0;
-if (!localStorage.window24h) localStorage.window24h = [];
 electricityMeter.on('consumed', (energy) => {
 	localStorage.totalEnergy += energy;
 	electricityMeter.emit('totalEnergy', localStorage.totalEnergy);
@@ -59,19 +58,9 @@ module.exports = [
 	// Current values from electricity meter
 	[require('ftrm-basic/from-event'), {
 		output: {
-			'consumed': 'home.haj.atf8.sj.electricitymeter.energy_Wh',
 			'totalEnergy': 'home.haj.atf8.sj.electricitymeter.energyTotal_Wh',
 			'power': 'home.haj.atf8.sj.electricitymeter.power_W'
 		},
 		bus: electricityMeter
-	}],
-
-	// Sliding window for accumulating the consumed energy of the past 24h
-	[require('ftrm-basic/sliding-window'), {
-		input: 'home.haj.atf8.sj.electricitymeter.energyTotal_Wh',
-		output: 'home.haj.atf8.sj.electricitymeter.energy24h_Wh',
-		includeValue: (age) => age < 86400000, // 1 day
-		calcOutput: (window) => window[0] - window[window.length - 1],
-		window: localStorage.window24h
 	}]
 ];
