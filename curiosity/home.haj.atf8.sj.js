@@ -29,7 +29,8 @@ module.exports = async (ftrm) => {
 	const nodes = [];
 
 	async function newSeries(src, dst) {
-		src = await db.createReadStream(src, {follow: true});
+		const from = Date.now() - dst.reduce((acc, d) => Math.max(acc, d.periodLength), 0) - 3600000;
+		src = await db.createReadStream(src, {follow: true, from});
 		dst.forEach((d) => {
 			const w = new Window(Date.now(), d.periodLength);
 			src.pipe(w);
