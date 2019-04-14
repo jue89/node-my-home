@@ -38,7 +38,8 @@ module.exports = async (ftrm) => {
 			nodes.push([require('ftrm-basic/generic'), {
 				output: d.pipe,
 				factory: (i, o) => {
-					w.on('data', (item) => o[0].value = item.value);
+					w.on('data', (item) => o[0].set(item.value, item.timestamp));
+					return () => w.destroy();
 				}
 			}]);
 		});
