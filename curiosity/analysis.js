@@ -1,5 +1,6 @@
 const stream = require('stream');
 const tsfoo = require('tsfoo');
+const secrets = require('./secrets.json');
 
 class Window extends stream.Transform {
 	constructor (startAt = 0, periodLength = 24 * 3600 * 1000, scale = 3600 * 1000) {
@@ -44,7 +45,7 @@ module.exports = async (ftrm) => {
 	}
 
 	// Open database
-	const db = await tsfoo.openDB('/media/data/my-home');
+	const db = await tsfoo.openDB(secrets.dbPath);
 
 	// Add meters
 	await newSeries('home.haj.atf8.sj.electricitymeter.energyTotal_Wh', [{

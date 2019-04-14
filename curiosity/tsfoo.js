@@ -1,8 +1,9 @@
 const tsfoo = require('tsfoo');
+const secrets = require('./secrets.json');
 
 module.exports = async (ftrm) => {
 	// Open database
-	const db = await tsfoo.openDB('/media/data/my-home');
+	const db = await tsfoo.openDB(secrets.dbPath);
 
 	// Create multiplexer that decides to write to wich series based on the pipe
 	const multiplexer = tsfoo.createMultiplexer(db);
