@@ -38,9 +38,9 @@ module.exports = [
 	[require('ftrm-basic/select'), {
 		input: [
 			{pipe: 'home.haj.atf8.sj.leo.room.desiredTemperature_degC.window'},
-			{pipe: 'home.haj.atf8.sj.leo.room.desiredTemperature_degC.manual', expire: 3 * 60 * 60 * 1000},
+			{pipe: 'home.haj.atf8.sj.leo.room.desiredTemperature_degC.manual', expire: 18 * 60 * 60 * 1000},
 			{pipe: 'home.haj.atf8.sj.leo.room.desiredTemperature_degC.schedule'},
-			{value: 14}
+			{value: 12}
 		],
 		output: 'home.haj.atf8.sj.leo.room.desiredTemperature_degC',
 		weight: 'prio'
@@ -83,7 +83,7 @@ module.exports = [
 		input: [],
 		output: 'home.haj.atf8.sj.leo.room.desiredTemperature_degC.schedule',
 		interval: 60000 * 5,
-		schedule: (now) => 15
+		schedule: (now) => 12
 	}],
 
 	// Controllers:
