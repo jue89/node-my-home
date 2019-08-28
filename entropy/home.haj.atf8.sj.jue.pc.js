@@ -66,7 +66,7 @@ module.exports = [
 	[require('ftrm-basic/select'), {
 		input: [
 			{pipe: 'home.haj.atf8.sj.jue.pc.master.desiredOnState.switch', expire: 50 * 1000},
-			{pipe: 'home.haj.atf8.sj.jue.pc.master.desiredOnState.power', expire: 30 * 1000},
+			{pipe: 'home.haj.atf8.sj.jue.pc.master.desiredOnState.power', expire: 90 * 1000},
 			{pipe: 'home.haj.atf8.sj.jue.pc.master.desiredOnState.override'},
 			{value: false}
 		],
