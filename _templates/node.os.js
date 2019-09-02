@@ -15,6 +15,7 @@ module.exports = (ftrm) => {
 	// Load average
 	const loadNames = ['avg1', 'avg5', 'avg15'];
 	components.push([require('ftrm-basic/inject-many'), {
+		name: 'load',
 		output: loadNames.reduce((output, name) => {
 			output[name] = `node.${ftrm.node}.os.load.${name}`
 			return output;
@@ -28,6 +29,7 @@ module.exports = (ftrm) => {
 
 	// Uptime
 	components.push([require('ftrm-basic/inject'), {
+		name: 'os-uptime',
 		output: `node.${ftrm.node}.os.uptime`,
 		inject: () => os.uptime(),
 		interval: 5 * 60 * 1000
@@ -38,6 +40,7 @@ module.exports = (ftrm) => {
 		// Get detailed info from the /proc filesystem
 		const REmem = /^([a-zA-Z]+): *([0-9]+) kB$/;
 		components.push([require('ftrm-basic/inject-many'), {
+			name: 'mem',
 			output: {
 				'used': `node.${ftrm.node}.os.mem.used`,
 				'free': `node.${ftrm.node}.os.mem.free`,
@@ -69,6 +72,7 @@ module.exports = (ftrm) => {
 	} else {
 		// The easy implementation for non-linux systems
 		components.push([require('ftrm-basic/inject-many'), {
+			name: 'mem',
 			output: {
 				'free': `node.${ftrm.node}.os.mem.free`,
 				'used': `node.${ftrm.node}.os.mem.used`

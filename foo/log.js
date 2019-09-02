@@ -1,4 +1,5 @@
 module.exports = [require('ftrm-basic/to-writable'), {
+	name: 'log-to-stdout',
 	input: '#',
 	stream: process.stdout,
 	dontCloseStream: true,

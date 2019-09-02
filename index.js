@@ -21,4 +21,4 @@ FTRM({
 	log: `${logScope}-${logSink}`,
 	node,
 	dryRun
-});
+}).catch(console.error);

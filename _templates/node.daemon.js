@@ -3,6 +3,7 @@ module.exports = (ftrm) => {
 
 	// Load average
 	components.push([require('ftrm-basic/inject'), {
+		name: 'daemon-uptime',
 		output: `node.${ftrm.node}.daemon.uptime`,
 		inject: () => process.uptime(),
 		interval: 5 * 60 * 1000
@@ -10,6 +11,7 @@ module.exports = (ftrm) => {
 
 	// Memory
 	components.push([require('ftrm-basic/inject-many'), {
+		name: 'daemon-mem',
 		output: {
 			'heapTotal': `node.${ftrm.node}.daemon.mem.heapTotal`,
 			'heapUsed': `node.${ftrm.node}.daemon.mem.heapUsed`,
