@@ -9,7 +9,8 @@ module.exports = [require('ftrm-basic/generic'), {
 		i[0].on('update', (value, timestamp, src) => {
 			if (typeof value == 'number') value = value.toFixed(2);
 			const pipe = src.event;
-			log.debug(`${pipe.padEnd(90)} ${value}`, {pipe});
+			value = `${value}`;
+			log.debug(`${pipe.padEnd(80)} ${value.padStart(20)}`, {pipe});
 		});
 	}
 }];
