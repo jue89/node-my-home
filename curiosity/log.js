@@ -1,13 +1,15 @@
-module.exports = [require('ftrm-basic/to-writable'), {
-	input: '#',
-	stream: process.stdout,
-	dontCloseStream: true,
-	format: (value, ts, src) => {
-		let padding = 80 - src.event.length;
-		if (typeof value == 'number') value = value.toFixed(2);
-		else value = value.toString();
-		padding -= value.length;
-		if (padding < 1) padding = 1;
-		return `${src.event}${' '.repeat(padding)}${value.toString()}\n`;
+const Journal = require('systemd-journald');
+const log = new Journal({syslog_identifier: 'my-home'});
+
+module.exports = [require('ftrm-basic/generic'), {
+	name: 'log-to-journal',
+	input: [{pipe: '#', spy: true}],
+	factory: (i) => {
+		const log = new Journal({syslog_identifier: 'my-home'});
+		i[0].on('update', (value, timestamp, src) => {
+			if (typeof value == 'number') value = value.toFixed(2);
+			const pipe = src.event;
+			log.debug(`${pipe.padEnd(90)} ${value}`, {pipe});
+		});
 	}
 }];

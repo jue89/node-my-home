@@ -31,6 +31,7 @@ async function getLocalMacs() {
 }
 
 module.exports = [require('ftrm-basic/inject'), {
+	name: 'freifunk-client-poll',
 	output: 'home.haj.atf8.network.freifunkClients',
 	inject: () => getLocalMacs(),
 	interval: 3 * 60 * 1000

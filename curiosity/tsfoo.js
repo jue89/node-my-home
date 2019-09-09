@@ -11,6 +11,7 @@ module.exports = async (ftrm) => {
 
 	// Return config for our instance
 	return [require('ftrm-basic/to-writable'), {
+		name: 'log-to-tsfoo',
 		input: '#',
 		stream: multiplexer,
 		format: (value, timestamp, src) => ({series: src.event, value, timestamp})

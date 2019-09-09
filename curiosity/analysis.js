@@ -36,6 +36,7 @@ module.exports = async (ftrm) => {
 			const w = new Window(Date.now(), d.periodLength);
 			src.pipe(w);
 			nodes.push([require('ftrm-basic/generic'), {
+				name: `aggregate-${d.pipe}`,
 				output: d.pipe,
 				factory: (i, o) => {
 					w.on('data', (item) => o[0].set(item.value, item.timestamp));
