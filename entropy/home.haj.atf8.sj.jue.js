@@ -4,23 +4,27 @@ module.exports = [
 	// Sensors:
 	// - room temperature
 	[require('ftrm-sensors/w1therm'), {
+		name: 'room-temp',
 		output: 'home.haj.atf8.sj.jue.room.actualTemperature_degC',
 		sensorSerial: '28-0000074a6573',
 		interval: 20000
 	}],
 	// - radiator temperature
 	[require('ftrm-sensors/w1therm'), {
+		name: 'radiator-temp',
 		output: 'home.haj.atf8.sj.jue.radiator.actualTemperature_degC',
 		sensorSerial: '10-000802bf3a83',
 		interval: 20000
 	}],
 	// - window contact
 	[require('ftrm-gpio/in'), {
+		name: 'window-sensor',
 		output: 'home.haj.atf8.sj.jue.window.open',
 		gpio: 27,
 		interval: 5 * 60 * 1000
 	}],
 	[require('ftrm-homekit')('ContactSensor'), {
+		name: 'window-sensor-homekit',
 		input: {'ContactSensorState': 'home.haj.atf8.sj.jue.window.open'},
 		displayName: 'Window'
 	}],
@@ -28,6 +32,7 @@ module.exports = [
 	// Actors:
 	// - radiator valve
 	[require('ftrm-gpio/out'), {
+		name: 'radiator-valve',
 		input: [{pipe: 'home.haj.atf8.sj.jue.radiator.open', expire: 60000}],
 		gpio: 17,
 		default: false
@@ -36,9 +41,10 @@ module.exports = [
 	// Setpoint:
 	// - select
 	[require('ftrm-basic/select'), {
+		name: 'room-setpoint',
 		input: [
 			{pipe: 'home.haj.atf8.sj.jue.room.desiredTemperature_degC.window'},
-			{pipe: 'home.haj.atf8.sj.jue.room.desiredTemperature_degC.homekit', expire: 3 * 60 * 60 * 1000},
+			{pipe: 'home.haj.atf8.sj.jue.room.desiredTemperature_degC.homekit', expire: 3 * 60 * 60 * 1000, logLevelExpiration: null},
 			{pipe: 'home.haj.atf8.sj.jue.room.desiredTemperature_degC.schedule'},
 			{value: 14}
 		],
@@ -47,12 +53,14 @@ module.exports = [
 	}],
 	// - window
 	[require('ftrm-basic/map'), {
+		name: 'room-setpoint-window',
 		input: 'home.haj.atf8.sj.jue.window.open',
 		output: 'home.haj.atf8.sj.jue.room.desiredTemperature_degC.window',
 		map: (open) => open ? 10 : undefined
 	}],
 	// - homekit
 	[require('ftrm-homekit')('Thermostat'), {
+		name: 'room-setpoint-homekit',
 		input: [
 			{name: 'CurrentTemperature', pipe: 'home.haj.atf8.sj.jue.room.actualTemperature_degC'},
 			{name: 'CurrentHeatingCoolingState', pipe: 'home.haj.atf8.sj.jue.radiator.open'},
@@ -67,6 +75,7 @@ module.exports = [
 	}],
 	// - schedule
 	[require('ftrm-basic/scheduler'), {
+		name: 'room-setpoint-scheduler',
 		input: [
 			'user.jue.present.atf8',
 			'user.jue.distance_m.home',
@@ -114,6 +123,7 @@ module.exports = [
 	// Controllers:
 	// - room temperature
 	[require('ftrm-ctrl/pid'), {
+		name: 'room-ctrl',
 		input: {
 			'k_p': {value: 8},
 			'k_i': {value: 0.02},
@@ -128,6 +138,7 @@ module.exports = [
 		}
 	}],
 	[require('ftrm-basic/combine'), {
+		name: 'radiator-setpoint',
 		input: {
 			'actual': 'home.haj.atf8.sj.jue.room.actualTemperature_degC',
 			'desiredDiff': 'home.haj.atf8.sj.jue.radiator.desiredDiffTemperature_degC'
@@ -142,6 +153,7 @@ module.exports = [
 	}],
 	// - radiator temperature
 	[require('ftrm-ctrl/bangbang'), {
+		name: 'radiator-ctrl',
 		input: {
 			'hysteresis': {value: 1},
 			'actualValue': {pipe: 'home.haj.atf8.sj.jue.radiator.actualTemperature_degC'},
