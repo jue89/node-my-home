@@ -14,7 +14,6 @@ module.exports = async (ftrm) => {
 		name: 'log-to-tsfoo',
 		input: '#',
 		stream: multiplexer,
-		format: (value, timestamp, src) => ({series: src.event, value, timestamp})
+		format: (value, timestamp, src) => ({series: src.pipe, value, timestamp})
 	}];
 };
-

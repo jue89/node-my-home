@@ -9,7 +9,7 @@ module.exports = [
 			const log = new Journal({syslog_identifier: 'my-home'});
 			i[0].on('update', (value, timestamp, src) => {
 				if (typeof value == 'number') value = value.toFixed(2);
-				const pipe = src.event;
+				const pipe = src.pipe;
 				value = `${value}`;
 				log.debug(`${pipe.padEnd(80)} ${value.padStart(20)}`, {pipe});
 			});
