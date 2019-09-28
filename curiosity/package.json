@@ -1,7 +1,7 @@
 {
   "name": "curiosity",
   "dependencies": {
-    "ftrm-inspector": "git+https://github.com/Footurama/ftrm-inspector.git#fc084f2d602b18fa8eeeca930821d1df4e91c153",
+    "ftrm-inspector": "git+https://github.com/Footurama/ftrm-inspector.git#af0f619970715617fc01d3113a010669294de869",
     "ftrm-tracking": "git+https://github.com/Footurama/ftrm-tracking.git#e64712e016b0d190d9bd34773790ca8fd26180c9",
     "tsfoo": "git+https://github.com/jue89/node-tsfoo.git#11f73f7e17807321417d58a814c1720a35bcf591"
   }
