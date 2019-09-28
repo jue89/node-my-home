@@ -27,6 +27,7 @@ function switchRelay (on) {
 module.exports = [
 	// Find the highest temperature request
 	[require('ftrm-basic/select'), {
+		name: 'supply-temp-requested',
 		input: [
 			{pipe: 'home.haj.atf8.sj.jue.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
 			{pipe: 'home.haj.atf8.sj.steffen.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
@@ -39,11 +40,13 @@ module.exports = [
 
 	// Enable the pump if energy is requested
 	[require('ftrm-basic/map'), {
+		name: 'heating-onstate-requested',
 		input: 'home.haj.atf8.sj.heating.desiredSupplyTemperature_degC',
 		output: [{pipe: 'home.haj.atf8.sj.heating.pump.desiredOnState', throttle: 5 * 60 * 1000}],
 		map: (temp) => temp > 25
 	}],
 	[require('ftrm-basic/map'), {
+		name: 'heating-onstate',
 		input: 'home.haj.atf8.sj.heating.pump.desiredOnState',
 		output: 'home.haj.atf8.sj.heating.pump.actualOnState',
 		map: async (on) => {
