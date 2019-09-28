@@ -52,6 +52,7 @@ const power2hue = [
 
 module.exports = [
 	[require('ftrm-basic/generic'), {
+		name: 'electricitymeter-leds',
 		input: 'home.haj.atf8.sj.electricitymeter.avgPowerPerWeek_W',
 		factory: (i, o) => {
 			// Open SPI device

@@ -57,6 +57,7 @@ electricityMeter.on('power', (pwr) => console.log(`Power consumption ${pwr}W`));
 module.exports = [
 	// Current values from electricity meter
 	[require('ftrm-basic/from-event'), {
+		name: 'electricitymeter',
 		output: {
 			'totalEnergy': 'home.haj.atf8.sj.electricitymeter.energyTotal_Wh',
 			'power': 'home.haj.atf8.sj.electricitymeter.power_W'
