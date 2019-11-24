@@ -58,7 +58,7 @@ module.exports = [
 		name: 'room-setpoint',
 		input: [
 			{pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.window'},
-			{pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.homekit', expire: 3 * 60 * 60 * 1000},
+			{pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.homekit', expire: 3 * 60 * 60 * 1000, logLevelExpiration: null},
 			{pipe: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.schedule'},
 			{value: 14}
 		],

@@ -17,7 +17,7 @@ module.exports = [
 		name: 'supply-temp',
 		input: 'home.haj.atf8.outside.temperature_degC',
 		output: 'home.haj.atf8.sj.maxDesiredDiffTemperature_degC',
-		map: (temp) => Math.max(0, (18 - temp) * 2)
+		map: (temp) => Math.max(0, (22 - temp) * 2)
 	}],
 	[require('ftrm-homekit')('TemperatureSensor'), {
 		name: 'supply-temp-homekit',
