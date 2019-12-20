@@ -79,24 +79,25 @@ module.exports = [
 		input: [
 			'user.jue.present.atf8',
 			'user.jue.distance_m.home',
-			'user.jue.devices.bart.online'
+			'user.jue.devices.bart.online',
+			'user.fpi.present.atf8'
 		],
 		output: 'home.haj.atf8.sj.jue.room.desiredTemperature_degC.schedule',
 		interval: 60000 * 5,
-		schedule: (now, present, distance, pc) => {
+		schedule: (now, presentJue, distance, pc, presentFpi) => {
 			// Don't turn the heating down when sitting in front of the pc
-			if (present && pc) return 19;
+			if (presentJue && pc) return 19;
 
 			const time = now.m / 60 + now.h;
 
 			// Get temperatues
-			if (present) distance = 0;
+			if (presentJue || presentFpi) distance = 0;
 			const tempDay = linterpol(distance, [
 				[  100, 18],
 				[ 4100, 16],
 				[80000, 12]
 			]);
-			const tempNight = present ? 15 : 12;
+			const tempNight = (presentJue || presentFpi) ? 15 : 12;
 
 			// Build schedule:
 			const schedule = (now.dayofweek >= 6) ? [
@@ -107,11 +108,8 @@ module.exports = [
 				[ 1, tempNight],
 			] : [
 				// Week day
-				[ 6, tempNight],
-				[ 8, tempDay],
-				[ 9, tempDay - 1],
-				[17, tempDay - 1],
-				[19, tempDay],
+				[ 8, tempNight],
+				[ 9, tempDay],
 				[22, tempDay],
 				[23, tempNight],
 			];
