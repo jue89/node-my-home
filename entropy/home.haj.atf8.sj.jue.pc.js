@@ -38,7 +38,7 @@ module.exports = [
 			'ApparentPower': 'home.haj.atf8.sj.jue.pc.master.apparentPower',
 			'ReactivePower': 'home.haj.atf8.sj.jue.pc.master.reactivePower',
 		},
-		inject: () => fetchPower('shelly-bart.lan.13pm.eu'),
+		inject: () => fetchPower('100.64.0.2'),
 		interval: 20 * 1000
 	}],
 
@@ -86,7 +86,7 @@ module.exports = [
 		name: 'pc-relay',
 		input: 'home.haj.atf8.sj.jue.pc.master.desiredOnState',
 		output: 'home.haj.atf8.sj.jue.pc.master.actualOnState',
-		map: (on) => switchRelay('shelly-bart.lan.13pm.eu', on)
+		map: (on) => switchRelay('100.64.0.2', on)
 	}],
 
 	// Slave: Power measurement
@@ -97,7 +97,7 @@ module.exports = [
 			'ApparentPower': 'home.haj.atf8.sj.jue.pc.slave.apparentPower',
 			'ReactivePower': 'home.haj.atf8.sj.jue.pc.slave.reactivePower',
 		},
-		inject: () => fetchPower('shelly-bart-periph.lan.13pm.eu'),
+		inject: () => fetchPower('100.64.0.3'),
 		interval: 20 * 1000
 	}],
 
@@ -128,6 +128,6 @@ module.exports = [
 		name: 'periph-relay',
 		input: 'home.haj.atf8.sj.jue.pc.slave.desiredOnState',
 		output: 'home.haj.atf8.sj.jue.pc.slave.actualOnState',
-		map: (on) => switchRelay('shelly-bart-periph.lan.13pm.eu', on)
+		map: (on) => switchRelay('100.64.0.3', on)
 	}],
 ];
