@@ -7,7 +7,7 @@ const sem = qsem(1);
 
 function getSmart (device) {
 	return sem.limit(async () => {
-		const {stdout} = await exec(`smartctl -A -f old /dev/${device}`);
+		const {stdout} = await exec(`smartctl -A -n standby -f old /dev/${device}`);
 		const lines = stdout.split('\n');
 		const startIndex = lines.findIndex((l) => l.substr(0, 3) === 'ID#');
 		const table = lines.slice(startIndex)
