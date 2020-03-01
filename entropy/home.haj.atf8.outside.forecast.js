@@ -100,6 +100,7 @@ const getForecast = async (date, geofix) => {
 };
 
 module.exports = [require('ftrm-basic/generic'), {
+	name: 'forecast',
 	output: {
 		'temp': 'home.haj.atf8.outside.forecast.temperature_degC',
 		'wind': 'home.haj.atf8.outside.forecast.wind_kmph',
@@ -112,8 +113,8 @@ module.exports = [require('ftrm-basic/generic'), {
 		const INTERVAL = 10 * 60 * 1000; // 10 minutes
 		const interval = setInterval(async () => {
 			try {
-				// Fetch forecast 6h in the future
-				const date = Date.now() + 6 * 3600 * 1000;
+				// Fetch forecast 9h in the future
+				const date = Date.now() + 9 * 3600 * 1000;
 				const prediction = await getForecast(date, secrets.atf8.geofix);
 				Object.entries(prediction).forEach(([key, value]) => {
 					if (output[key]) output[key].set(value, date);
