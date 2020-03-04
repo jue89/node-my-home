@@ -7,7 +7,10 @@ const linterpol = require('linterpol');
 const secrets = require('./secrets.json');
 
 // Fetches the forecast for 5 days with 3 hour accurancy at given geofix
+const CACHETIME = 15 * 60 * 1000;
+const forecastCache = {};
 const fetchForecast = ([lat, lon]) => new Promise((resolve, reject) => {
+	if (forecastCache.ts && Date.now() - forecastCache.ts < CACHETIME) return resolve(forecastCache.data);
 	const apiEndpoint = url.parse(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${secrets.owm.appid}`);
 	https.get(apiEndpoint, (res) => {
 		const chunks = [];
@@ -16,6 +19,8 @@ const fetchForecast = ([lat, lon]) => new Promise((resolve, reject) => {
 			const body = Buffer.concat(chunks).toString();
 			if (res.statusCode === 200) {
 				const response = JSON.parse(body);
+				forecastCache.ts = Date.now();
+				forecastCache.data = response;
 				resolve(response);
 			} else {
 				reject(new Error(body));
@@ -76,7 +81,11 @@ const daylight = (date, [lat, lon]) => {
 const SCORE_BASE = 100;
 const rate = (x, decay) => {
 	let score = Object.entries(x).reduce((score, [key, value]) => {
-		if (decay[key]) score -= decay[key](value);
+		if (decay[key]) {
+			let x = decay[key](value);
+			if (x < 0) x = 0;
+			score -= x;
+		}
 		return score;
 	}, SCORE_BASE);
 	if (score > SCORE_BASE) score = SCORE_BASE;
@@ -90,31 +99,31 @@ const getForecast = async (date, geofix) => {
 	const prediction = approximate(date, points);
 	prediction.daylight = daylight(date, geofix);
 	prediction.score = rate(prediction, {
-		temp: (x) => Math.pow(x - 22, 2), // 12..32°C with optimum at 22°C
-		wind: (x) => 2.5 * x - 75,        // 30..70km/h with optimum slower than 30km/h
-		clouds: (x) => x * 10,            // Max cost: 10
-		rain: (x) => Math.sqrt(x) * 100,  // 0..1L/h
+		temp: (x) => Math.pow(x - 22, 4) * 0.005, // 10..34°C with optimum at 22°C
+		wind: (x) => 2.5 * x - 75,                // 30..70km/h with optimum slower than 30km/h
+		clouds: (x) => x * 10,                    // Max cost: 10
+		rain: (x) => Math.sqrt(x) * 100,          // 0..1L/h
 		daylight: (x) => x * 100
 	});
 	return prediction;
 };
 
-module.exports = [require('ftrm-basic/generic'), {
+module.exports = [9, 24].map((hours) => [require('ftrm-basic/generic'), {
 	name: 'forecast',
 	output: {
-		'temp': 'home.haj.atf8.outside.forecast.temperature_degC',
-		'wind': 'home.haj.atf8.outside.forecast.wind_kmph',
-		'clouds': 'home.haj.atf8.outside.forecast.clouds',
-		'rain': 'home.haj.atf8.outside.forecast.rain_Lph',
-		'daylight': 'home.haj.atf8.outside.forecast.daylight',
-		'score': 'home.haj.atf8.outside.forecast.motorcycleFunScore'
+		'temp'    : `home.haj.atf8.outside.forecast.${hours}h.temperature_degC`,
+		'wind'    : `home.haj.atf8.outside.forecast.${hours}h.wind_kmph`,
+		'clouds'  : `home.haj.atf8.outside.forecast.${hours}h.clouds`,
+		'rain'    : `home.haj.atf8.outside.forecast.${hours}h.rain_Lph`,
+		'daylight': `home.haj.atf8.outside.forecast.${hours}h.daylight`,
+		'score'   : `home.haj.atf8.outside.forecast.${hours}h.motorcycleFunScore`
 	},
 	factory: (input, output, log) => {
 		const INTERVAL = 10 * 60 * 1000; // 10 minutes
 		const interval = setInterval(async () => {
 			try {
 				// Fetch forecast 9h in the future
-				const date = Date.now() + 9 * 3600 * 1000;
+				const date = Date.now() + hours * 3600 * 1000;
 				const prediction = await getForecast(date, secrets.atf8.geofix);
 				Object.entries(prediction).forEach(([key, value]) => {
 					if (output[key]) output[key].set(value, date);
@@ -125,4 +134,4 @@ module.exports = [require('ftrm-basic/generic'), {
 		}, INTERVAL);
 		return () => clearInterval(interval);
 	}
-}];
+}]);
