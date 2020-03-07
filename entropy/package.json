@@ -8,6 +8,7 @@
     "ftrm-tracking": "git+https://github.com/Footurama/ftrm-tracking.git#17e2689f937519a64ac59e5538e61295476fdcb4",
     "linterpol": "^1.0.0",
     "regression": "^2.0.1",
-    "sunrise-sunset-js": "^2.1.1"
+    "sunrise-sunset-js": "^2.1.1",
+    "tplink-smarthome-api": "^2.0.0"
   }
 }
