@@ -103,7 +103,7 @@ const getForecast = async (date, geofix) => {
 		wind: (x) => 2.5 * x - 75,                // 30..70km/h with optimum slower than 30km/h
 		clouds: (x) => x * 10,                    // Max cost: 10
 		rain: (x) => Math.sqrt(x) * 100,          // 0..1L/h
-		daylight: (x) => x * 100
+		daylight: (x) => (1 - x) * 100
 	});
 	return prediction;
 };
