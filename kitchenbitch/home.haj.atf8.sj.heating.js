@@ -26,7 +26,7 @@ function switchRelay (on) {
 
 module.exports = [
 	// Find the highest temperature request
-	[require('ftrm-basic/select'), {
+	[require('ftrm-basic/combine'), {
 		name: 'supply-temp-requested',
 		input: [
 			{pipe: 'home.haj.atf8.sj.jue.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
@@ -34,8 +34,20 @@ module.exports = [
 			{pipe: 'home.haj.atf8.sj.kitchen.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
 			{pipe: 'home.haj.atf8.sj.leo.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000}
 		],
+		output: [{pipe: 'home.haj.atf8.sj.heating.requestedSupplyTemperature_degC', throttle: 5 * 60 * 1000}],
+		combineExpiredInputs: false, // ... only output if every input is valid
+		combine: Math.max
+	}],
+
+	// Fallback to current maximum if not every room has reported its supply temperature request
+	[require('ftrm-basic/select'), {
+		name: 'supply-temp-desired',
+		input: [
+			{pipe: 'home.haj.atf8.sj.heating.requestedSupplyTemperature_degC', expire: 10 * 60 * 1000},
+			{pipe: 'home.haj.atf8.sj.maxDesiredDiffTemperature_degC'}
+		],
 		output: [{pipe: 'home.haj.atf8.sj.heating.desiredSupplyTemperature_degC', throttle: 5 * 60 * 1000}],
-		weight: 'max'
+		weight: 'prio'
 	}],
 
 	// Enable the pump if energy is requested
@@ -57,4 +69,3 @@ module.exports = [
 		}
 	}]
 ];
-
