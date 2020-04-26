@@ -32,9 +32,20 @@ async function getLocalMacs() {
 	return tg;
 }
 
-module.exports = [require('ftrm-basic/inject'), {
+module.exports = [[require('ftrm-basic/inject'), {
 	name: 'freifunk-client-poll',
 	output: 'home.haj.atf8.network.freifunkClients',
 	inject: () => getLocalMacs(),
 	interval: 3 * 60 * 1000
-}];
+}], [require('ftrm-http/server'), {
+	name: 'freifunk-client-rest-api',
+	input: [{
+		name: 'macs',
+		pipe: 'home.haj.atf8.network.freifunkClients',
+		convert: (v) => JSON.stringify({'ffh_clients': v || []})
+	}, {
+		name: 'temp_outdoor',
+		pipe: 'home.haj.atf8.outside.temperature_degC'
+	}],
+	port: 8080
+}]];
