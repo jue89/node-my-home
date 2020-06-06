@@ -34,9 +34,9 @@ module.exports = [
 	[require('ftrm-basic/inject-many'), {
 		name: 'pc-power',
 		output: {
-			'Power': 'home.haj.atf8.sj.jue.pc.master.activePower',
-			'ApparentPower': 'home.haj.atf8.sj.jue.pc.master.apparentPower',
-			'ReactivePower': 'home.haj.atf8.sj.jue.pc.master.reactivePower',
+			'Power': 'home.haj.atf8.wg.office.pcJue.master.activePower',
+			'ApparentPower': 'home.haj.atf8.wg.office.pcJue.master.apparentPower',
+			'ReactivePower': 'home.haj.atf8.wg.office.pcJue.master.reactivePower',
 		},
 		inject: () => fetchPower('100.64.0.2'),
 		interval: 20 * 1000
@@ -45,16 +45,16 @@ module.exports = [
 	// Master: Power switch
 	[require('ftrm-homekit')('Switch'), {
 		name: 'pc-switch-homekit',
-		input: { 'On': 'home.haj.atf8.sj.jue.pc.master.actualOnState' },
-		output: { 'On': 'home.haj.atf8.sj.jue.pc.master.desiredOnState.switch' },
+		input: { 'On': 'home.haj.atf8.wg.office.pcJue.master.actualOnState' },
+		output: { 'On': 'home.haj.atf8.wg.office.pcJue.master.desiredOnState.switch' },
 		displayName: 'PC'
 	}],
 
 	// Master: Power based switch: Keep the relay on as long the PC is powered on
 	[require('ftrm-basic/map'), {
 		name: 'pc-switch-power',
-		input: 'home.haj.atf8.sj.jue.pc.master.activePower',
-		output: 'home.haj.atf8.sj.jue.pc.master.desiredOnState.power',
+		input: 'home.haj.atf8.wg.office.pcJue.master.activePower',
+		output: 'home.haj.atf8.wg.office.pcJue.master.desiredOnState.power',
 		// true -> Keep power on; undefined -> Ask someone else ...
 		map: (pwr) => (pwr > 15) ? true : undefined
 	}],
@@ -62,7 +62,7 @@ module.exports = [
 	// Master: Override switch: Keeps the PC powered on - no matter whats going on
 	[require('ftrm-homekit')('Switch'), {
 		name: 'pc-switch-override',
-		output: { 'On': 'home.haj.atf8.sj.jue.pc.master.desiredOnState.override' },
+		output: { 'On': 'home.haj.atf8.wg.office.pcJue.master.desiredOnState.override' },
 		displayName: 'PC Override'
 	}],
 
@@ -70,13 +70,13 @@ module.exports = [
 	[require('ftrm-basic/select'), {
 		name: 'pc-switch',
 		input: [
-			{pipe: 'home.haj.atf8.sj.jue.pc.master.desiredOnState.switch', expire: 50 * 1000, logLevelExpiration: null},
-			{pipe: 'home.haj.atf8.sj.jue.pc.master.desiredOnState.power', expire: 90 * 1000},
-			{pipe: 'home.haj.atf8.sj.jue.pc.master.desiredOnState.override'},
+			{pipe: 'home.haj.atf8.wg.office.pcJue.master.desiredOnState.switch', expire: 50 * 1000, logLevelExpiration: null},
+			{pipe: 'home.haj.atf8.wg.office.pcJue.master.desiredOnState.power', expire: 90 * 1000},
+			{pipe: 'home.haj.atf8.wg.office.pcJue.master.desiredOnState.override'},
 			{value: false}
 		],
 		output: [
-			{pipe: 'home.haj.atf8.sj.jue.pc.master.desiredOnState', throttle: 10 * 60 * 1000}
+			{pipe: 'home.haj.atf8.wg.office.pcJue.master.desiredOnState', throttle: 10 * 60 * 1000}
 		],
 		weight: 'prio'
 	}],
@@ -84,8 +84,8 @@ module.exports = [
 	// Master: Switch the relay ...
 	[require('ftrm-basic/map'), {
 		name: 'pc-relay',
-		input: 'home.haj.atf8.sj.jue.pc.master.desiredOnState',
-		output: 'home.haj.atf8.sj.jue.pc.master.actualOnState',
+		input: 'home.haj.atf8.wg.office.pcJue.master.desiredOnState',
+		output: 'home.haj.atf8.wg.office.pcJue.master.actualOnState',
 		map: (on) => switchRelay('100.64.0.2', on)
 	}],
 
@@ -93,9 +93,9 @@ module.exports = [
 	[require('ftrm-basic/inject-many'), {
 		name: 'periph-power',
 		output: {
-			'Power': 'home.haj.atf8.sj.jue.pc.slave.activePower',
-			'ApparentPower': 'home.haj.atf8.sj.jue.pc.slave.apparentPower',
-			'ReactivePower': 'home.haj.atf8.sj.jue.pc.slave.reactivePower',
+			'Power': 'home.haj.atf8.wg.office.pcJue.slave.activePower',
+			'ApparentPower': 'home.haj.atf8.wg.office.pcJue.slave.apparentPower',
+			'ReactivePower': 'home.haj.atf8.wg.office.pcJue.slave.reactivePower',
 		},
 		inject: () => fetchPower('100.64.0.3'),
 		interval: 20 * 1000
@@ -104,7 +104,7 @@ module.exports = [
 	// Slave: Override switch: Keeps the PC powered on - no matter whats going on
 	[require('ftrm-homekit')('Switch'), {
 		name: 'periph-switch-override',
-		output: { 'On': 'home.haj.atf8.sj.jue.pc.slave.desiredOnState.override' },
+		output: { 'On': 'home.haj.atf8.wg.office.pcJue.slave.desiredOnState.override' },
 		displayName: 'PC Periph Override'
 	}],
 
@@ -112,12 +112,12 @@ module.exports = [
 	[require('ftrm-basic/combine'), {
 		name: 'periph-switch',
 		input: [
-			{pipe: 'home.haj.atf8.sj.jue.pc.master.actualOnState'},
+			{pipe: 'home.haj.atf8.wg.office.pcJue.master.actualOnState'},
 			{pipe: 'user.jue.present.atf8'},
-			{pipe: 'home.haj.atf8.sj.jue.pc.slave.desiredOnState.override'}
+			{pipe: 'home.haj.atf8.wg.office.pcJue.slave.desiredOnState.override'}
 		],
 		output: [
-			{pipe: 'home.haj.atf8.sj.jue.pc.slave.desiredOnState', throttle: 10 * 60 * 1000}
+			{pipe: 'home.haj.atf8.wg.office.pcJue.slave.desiredOnState', throttle: 10 * 60 * 1000}
 		],
 		combineExpiredInputs: true,
 		combine: (masterOnState, juePresent, override) => override || (masterOnState && juePresent) || false
@@ -126,8 +126,8 @@ module.exports = [
 	// Slave: Switch the relay ...
 	[require('ftrm-basic/map'), {
 		name: 'periph-relay',
-		input: 'home.haj.atf8.sj.jue.pc.slave.desiredOnState',
-		output: 'home.haj.atf8.sj.jue.pc.slave.actualOnState',
+		input: 'home.haj.atf8.wg.office.pcJue.slave.desiredOnState',
+		output: 'home.haj.atf8.wg.office.pcJue.slave.actualOnState',
 		map: (on) => switchRelay('100.64.0.3', on)
 	}],
 ];
