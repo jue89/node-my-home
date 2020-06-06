@@ -114,13 +114,14 @@ module.exports = [
 		input: [
 			{pipe: 'home.haj.atf8.wg.office.pcJue.master.actualOnState'},
 			{pipe: 'user.jue.present.atf8'},
+			{pipe: 'user.fpi.present.atf8'},
 			{pipe: 'home.haj.atf8.wg.office.pcJue.slave.desiredOnState.override'}
 		],
 		output: [
 			{pipe: 'home.haj.atf8.wg.office.pcJue.slave.desiredOnState', throttle: 10 * 60 * 1000}
 		],
 		combineExpiredInputs: true,
-		combine: (masterOnState, juePresent, override) => override || (masterOnState && juePresent) || false
+		combine: (masterOnState, juePresent, fpiPresent, override) => override || (masterOnState && (juePresent || fpiPresent)) || false
 	}],
 
 	// Slave: Switch the relay ...
