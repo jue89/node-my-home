@@ -91,7 +91,7 @@ module.exports = [
 			const time = now.m / 60 + now.h;
 
 			// Get temperatues
-			const tempDay = present ? 19 : 17
+			const tempDay = present ? 19 : 15;
 			const tempNight = present ? 16 : 13;
 
 			// Build schedule:
