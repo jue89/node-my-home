@@ -4,9 +4,9 @@ module.exports = (ftrm) => {
 	// Load average
 	components.push([require('ftrm-basic/inject'), {
 		name: 'daemon-uptime',
-		output: `node.${ftrm.node}.daemon.uptime`,
-		inject: () => process.uptime(),
-		interval: 5 * 60 * 1000
+		output: `node.${ftrm.node}.daemon.uptime_d`,
+		inject: () => process.uptime() / 3600 / 24,
+		interval: 20 * 60 * 1000
 	}]);
 
 	// Memory

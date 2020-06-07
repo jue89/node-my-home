@@ -30,9 +30,9 @@ module.exports = (ftrm) => {
 	// Uptime
 	components.push([require('ftrm-basic/inject'), {
 		name: 'os-uptime',
-		output: `node.${ftrm.node}.os.uptime`,
-		inject: () => os.uptime(),
-		interval: 5 * 60 * 1000
+		output: `node.${ftrm.node}.os.uptime_d`,
+		inject: () => os.uptime()  / 3600 / 24,
+		interval: 20 * 60 * 1000
 	}]);
 
 	// Memory
