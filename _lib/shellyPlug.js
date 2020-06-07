@@ -55,7 +55,7 @@ function factory (opts, input, output, log) {
 	});
 
 	// Relay state readback
-	if (opts.readbackInterval || output.Relay) {
+	if (opts.readbackInterval && output.Relay) {
 		const publishRelayState = () => safeQueryShelly('State').then((body) => {
 			if (!body) return;
 			output.Relay.value = body.POWER === 'ON';
