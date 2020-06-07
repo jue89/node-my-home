@@ -10,7 +10,7 @@ module.exports = [
 		},
 		output: {
 			'Relay': `${BASE}.master.actualOnState`,
-			'Power': `${BASE}.master.power_W`,
+			'Power': `${BASE}.master.activePower_W`,
 			'ApparentPower': `${BASE}.master.apparentPower_VA`,
 			'ReactivePower': `${BASE}.master.reactivePower_var`
 		},
@@ -31,7 +31,7 @@ module.exports = [
 	// Master: Power based switch: Keep the relay on as long the PC is powered on
 	[require('ftrm-basic/map'), {
 		name: 'pc-switch-power',
-		input: `${BASE}.master.activePower`,
+		input: `${BASE}.master.activePower_W`,
 		output: `${BASE}.master.desiredOnState.power`,
 		// true -> Keep power on; undefined -> Ask someone else ...
 		map: (pwr) => (pwr > 15) ? true : undefined
@@ -67,7 +67,7 @@ module.exports = [
 		},
 		output: {
 			'Relay': `${BASE}.slave.actualOnState`,
-			'Power': `${BASE}.slave.power_W`,
+			'Power': `${BASE}.slave.activePower_W`,
 			'ApparentPower': `${BASE}.slave.apparentPower_VA`,
 			'ReactivePower': `${BASE}.slave.reactivePower_var`
 		},

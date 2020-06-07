@@ -31,7 +31,7 @@ module.exports = [
 		},
 		output: {
 			'Relay': `${BASE}.actualOnState`,
-			'Power': `${BASE}.power_W`,
+			'Power': `${BASE}.activePower_W`,
 			'ApparentPower': `${BASE}.apparentPower_VA`,
 			'ReactivePower': `${BASE}.reactivePower_var`
 		},
