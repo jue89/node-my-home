@@ -61,7 +61,7 @@ module.exports = [
 
 	// Slave: Relay
 	[require('../_lib/shellyPlug.js'), {
-		name: 'pc-relay',
+		name: 'periph-relay',
 		input: {
 			'Relay': `${BASE}.slave.desiredOnState`
 		},
