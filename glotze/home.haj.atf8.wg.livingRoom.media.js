@@ -1,7 +1,7 @@
 const BASE = __filename.slice(__dirname.length + 1, -3);
 
 module.exports = [
-	// Shelly of the AV receiver
+	// AV Receiver: Shelly
 	[require('../_lib/shellyPlug.js'), {
 		name: 'avReceiver-shelly',
 		input: {
@@ -18,11 +18,36 @@ module.exports = [
 		powerReadoutInterval: 2 * 60 * 1000
 	}],
 
-	// Homekit interface
+	// AV Receiver: Homekit
 	[require('ftrm-homekit')('Switch'), {
 		name: 'avReceiver-homekit',
 		input: { 'On': `${BASE}.avReceiver.actualOnState` },
 		output: { 'On': `${BASE}.avReceiver.desiredOnState` },
 		displayName: 'AV Receiver'
+	}],
+
+	// TV: Shelly
+	[require('../_lib/shellyPlug.js'), {
+		name: 'tv-shelly',
+		input: {
+			'Relay': `${BASE}.tv.desiredOnState`
+		},
+		output: {
+			'Relay': `${BASE}.tv.actualOnState`,
+			'Power': `${BASE}.tv.power_W`,
+			'ApparentPower': `${BASE}.tv.apparentPower_VA`,
+			'ReactivePower': `${BASE}.tv.reactivePower_var`
+		},
+		host: 't-shelly-042.lan.13pm.eu',
+		readbackInterval: 5 * 60 * 1000,
+		powerReadoutInterval: 2 * 60 * 1000
+	}],
+
+	// TV: Homekit
+	[require('ftrm-homekit')('Switch'), {
+		name: 'tv-homekit',
+		input: { 'On': `${BASE}.tv.actualOnState` },
+		output: { 'On': `${BASE}.tv.desiredOnState` },
+		displayName: 'TV'
 	}]
 ]
