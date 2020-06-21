@@ -1,5 +1,7 @@
 const BASE = __filename.slice(__dirname.length + 1, -3);
 
+const YamahaAVReceiver = require('yamaha-nodejs');
+
 module.exports = [
 	// AV Receiver: Shelly
 	[require('../_lib/shellyPlug.js'), {
@@ -24,6 +26,19 @@ module.exports = [
 		input: { 'On': `${BASE}.avReceiver.actualOnState` },
 		output: { 'On': `${BASE}.avReceiver.desiredOnState` },
 		displayName: 'AV Receiver'
+	}],
+
+	// AV Receiver: API
+	[require('ftrm-basic/generic'), {
+		name: 'avReceiver',
+		input: {
+			input: `${BASE}.avReceiver.desiredMainInput`
+		},
+		factory: (i, o, log) => {
+			const av = new YamahaAVReceiver('t-yamaha.lan.13pm.eu');
+			const cmd = (cmd, args) => av[cmd].apply(av, args).catch((err) => log.error(err));
+			i.input.on('update', (input) => cmd('setMainInputTo', [input]));
+		}
 	}],
 
 	// TV: Shelly

@@ -10,6 +10,7 @@ function jsonOrString (value) {
 module.exports = [
 	// Scenes
 	[require('ftrm-http/server'), {
+		name: 'livingRoom-secenes-http',
 		output: [
 			{name: 'scene', pipe: `${BASE}.scene`, convert: jsonOrString}
 		],
@@ -17,9 +18,11 @@ module.exports = [
 		index: true
 	}],
 	[require('ftrm-basic/scene'), {
+		name: 'livingRoom-secenes',
 		input: `${BASE}.scene`,
 		output: {
 			avReceiverOn: 'home.haj.atf8.wg.livingRoom.media.avReceiver.desiredOnState',
+			avReceiverInput: 'home.haj.atf8.wg.livingRoom.media.avReceiver.desiredMainInput',
 			tvOn: 'home.haj.atf8.wg.livingRoom.media.tv.desiredOnState'
 		},
 		scenes: {
@@ -27,13 +30,18 @@ module.exports = [
 				avReceiverOn.value = false;
 				tvOn.value = false;
 			},
-			netRadio: async ({}, {avReceiverOn, tvOn}) => {
+			netRadio: async ({}, {avReceiverOn, avReceiverInput, tvOn}, {delay}) => {
 				avReceiverOn.value = true;
 				tvOn.value = false;
+				await delay(3000);
+				avReceiverMainInput.value = 'NET RADIO';
 			},
-			cinema: async({}, {avReceiverOn, tvOn}) => {
+			cinema: async({src}, {avReceiverOn, avReceiverInput, tvOn}, {delay}) => {
 				avReceiverOn.value = true;
 				tvOn.value = true;
+				await delay(3000);
+				if (src === 'raspi') avReceiverInput.value = 'HDMI1';
+				if (src === 'appletv') avReceiverInput.value = 'HDMI2';
 			}
 		}
 	}]
