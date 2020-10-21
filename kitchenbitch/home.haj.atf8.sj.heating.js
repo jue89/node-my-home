@@ -32,7 +32,7 @@ module.exports = [
 			{pipe: 'home.haj.atf8.sj.jue.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
 			{pipe: 'home.haj.atf8.sj.steffen.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
 			{pipe: 'home.haj.atf8.sj.kitchen.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
-			{pipe: 'home.haj.atf8.sj.leo.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000}
+			{pipe: 'home.haj.atf8.wg.officeJue.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000}
 		],
 		output: [{pipe: 'home.haj.atf8.sj.heating.requestedSupplyTemperature_degC', throttle: 5 * 60 * 1000}],
 		combineExpiredInputs: false, // ... only output if every input is valid
