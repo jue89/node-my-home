@@ -45,7 +45,7 @@ module.exports = [
 		name: 'room-setpoint',
 		input: [
 			{pipe: `${BASE}.room.desiredTemperature_degC.window`},
-			{pipe: `${BASE}.room.desiredTemperature_degC.manual`, expire: 18 * 60 * 60 * 1000, logLevelExpiration: null},
+			{pipe: `${BASE}.room.desiredTemperature_degC.manual`, expire: 3 * 60 * 60 * 1000, logLevelExpiration: null},
 			{pipe: `${BASE}.room.desiredTemperature_degC.schedule`},
 			{value: 12}
 		],
