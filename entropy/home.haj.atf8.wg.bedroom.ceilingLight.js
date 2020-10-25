@@ -17,7 +17,7 @@ module.exports = [
 			'Relay': `${BASE}.desiredOnState`
 		},
 		output: {
-			'Relay': `${BASE}.actualOnState`
+			'Relay': {pipe: `${BASE}.actualOnState`, throttle: 10 * 60 * 1000}
 		},
 		host: '100.64.0.5',
 		user: secrets.shelly.user,
