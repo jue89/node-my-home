@@ -30,7 +30,7 @@ module.exports = [
 		name: 'supply-temp-requested',
 		input: [
 			{pipe: 'home.haj.atf8.wg.bedroom.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
-			{pipe: 'home.haj.atf8.sj.steffen.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
+			{pipe: 'home.haj.atf8.wg.officeFpi.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
 			{pipe: 'home.haj.atf8.sj.kitchen.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000},
 			{pipe: 'home.haj.atf8.wg.officeJue.radiator.desiredTemperature_degC', expire: 10 * 60 * 1000}
 		],
