@@ -80,13 +80,13 @@ module.exports = [
 		input: [
 			'user.jue.present.atf8',
 			'user.jue.distance_m.home',
-			'user.jue.devices.bart.online'
+			'home.haj.atf8.wg.officeJue.pcJue.inUse'
 		],
 		output: `${BASE}.room.desiredTemperature_degC.schedule`,
 		interval: 60000 * 5,
-		schedule: (now, presentJue, distance, pc) => {
-			// Don't turn the heating down when sitting in front of the pc
-			if (presentJue && pc) return 20;
+		schedule: (now, presentJue, distance, pcInUse) => {
+			// Don't turn the heating down when someone is sitting in front of the PC
+			if (pcInUse) return 20;
 
 			const time = now.m / 60 + now.h;
 

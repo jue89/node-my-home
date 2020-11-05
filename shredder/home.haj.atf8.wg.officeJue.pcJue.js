@@ -90,13 +90,20 @@ module.exports = [
 		input: [
 			{pipe: `${BASE}.master.actualOnState`},
 			{pipe: `user.jue.present.atf8`},
-			{pipe: `user.fpi.present.atf8`},
 			{pipe: `${BASE}.slave.desiredOnState.override`}
 		],
 		output: [
 			{pipe: `${BASE}.slave.desiredOnState`, throttle: 10 * 60 * 1000}
 		],
 		combineExpiredInputs: true,
-		combine: (masterOnState, juePresent, fpiPresent, override) => override || (masterOnState && (juePresent || fpiPresent)) || false
+		combine: (masterOnState, juePresent, override) => override || (masterOnState && juePresent) || false
+	}],
+
+	// Workstation online
+	[require('ftrm-basic/map'), {
+		name: 'workstation-in-use',
+		input: `${BASE}.slave.activePower_W`,
+		output: `${BASE}.inUse`,
+		map: (x) => x > 30 // W
 	}],
 ];
