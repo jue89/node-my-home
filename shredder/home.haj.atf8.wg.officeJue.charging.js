@@ -1,4 +1,4 @@
-const secrets = require('./secrets.json');
+const secrets = require('../secrets.json');
 const BASE = __filename.slice(__dirname.length + 1, -3);
 
 module.exports = [
@@ -35,9 +35,7 @@ module.exports = [
 			'ApparentPower': `${BASE}.apparentPower_VA`,
 			'ReactivePower': `${BASE}.reactivePower_var`
 		},
-		host: '100.64.0.4',
-		user: secrets.shelly.user,
-		password: secrets.shelly.password,
-		powerReadoutInterval: 2 * 60 * 1000
+		powerReadoutInterval: 2 * 60 * 1000,
+		...secrets.shelly.charging
 	}]
 ];

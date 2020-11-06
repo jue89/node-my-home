@@ -1,4 +1,4 @@
-const secrets = require('./secrets.json');
+const secrets = require('../secrets.json');
 const BASE = __filename.slice(__dirname.length + 1, -3);
 
 module.exports = [
@@ -14,10 +14,8 @@ module.exports = [
 			'ApparentPower': `${BASE}.master.apparentPower_VA`,
 			'ReactivePower': `${BASE}.master.reactivePower_var`
 		},
-		host: '100.64.0.2',
-		user: secrets.shelly.user,
-		password: secrets.shelly.password,
-		powerReadoutInterval: 20 * 1000
+		powerReadoutInterval: 20 * 1000,
+		...secrets.shelly.pcJueMaster
 	}],
 
 	// Master: Power switch
@@ -71,10 +69,8 @@ module.exports = [
 			'ApparentPower': `${BASE}.slave.apparentPower_VA`,
 			'ReactivePower': `${BASE}.slave.reactivePower_var`
 		},
-		host: '100.64.0.3',
-		user: secrets.shelly.user,
-		password: secrets.shelly.password,
-		powerReadoutInterval: 20 * 1000
+		powerReadoutInterval: 20 * 1000,
+		...secrets.shelly.pcJueMaster
 	}],
 
 	// Slave: Override switch: Keeps the PC powered on - no matter whats going on

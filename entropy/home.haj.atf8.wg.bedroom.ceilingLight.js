@@ -1,5 +1,5 @@
 const BASE = __filename.slice(__dirname.length + 1, -3);
-const secrets = require('./secrets.json');
+const secrets = require('../secrets.json');
 
 module.exports = [
 	// Homekit Switch
@@ -19,9 +19,7 @@ module.exports = [
 		output: {
 			'Relay': {pipe: `${BASE}.actualOnState`, throttle: 10 * 60 * 1000}
 		},
-		host: '100.64.0.5',
-		user: secrets.shelly.user,
-		password: secrets.shelly.password,
-		readbackInterval: 5 * 1000
+		powerReadoutInterval: 20 * 1000,
+		...secrets.shelly.bedroomCeilingLight
 	}]
 ];
