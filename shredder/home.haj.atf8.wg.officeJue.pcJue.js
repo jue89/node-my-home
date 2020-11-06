@@ -70,7 +70,7 @@ module.exports = [
 			'ReactivePower': `${BASE}.slave.reactivePower_var`
 		},
 		powerReadoutInterval: 20 * 1000,
-		...secrets.shelly.pcJueMaster
+		...secrets.shelly.pcJueSlave
 	}],
 
 	// Slave: Override switch: Keeps the PC powered on - no matter whats going on
