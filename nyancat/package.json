@@ -2,10 +2,10 @@
   "name": "entropy",
   "dependencies": {
     "ftrm-ctrl": "git+https://github.com/Footurama/ftrm-ctrl.git#8b79f1141e04fc569c55ee02b343dea51363093d",
-    "ftrm-gpio": "git+https://github.com/Footurama/ftrm-gpio.git#c963b2f7d6d86a3e9f52e7d05a40a25dd829d3a1",
+    "ftrm-gpio": "git+https://github.com/Footurama/ftrm-gpio.git#849f363e349f650d8cc0544815233be5862cf29d",
     "ftrm-homekit": "git+https://github.com/Footurama/ftrm-homekit.git#c64fe512c1544fe3cd2e37814c27a0539aa0f92c",
-    "ftrm-tracking": "git+https://github.com/Footurama/ftrm-tracking.git#3968fa251ade134bfdc83389f6ae08cc238600e6",
     "ftrm-sensors": "0.0.0",
+    "ftrm-tracking": "git+https://github.com/Footurama/ftrm-tracking.git#3968fa251ade134bfdc83389f6ae08cc238600e6",
     "linterpol": "^1.0.0"
   }
 }
