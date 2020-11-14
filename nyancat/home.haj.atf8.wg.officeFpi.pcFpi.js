@@ -121,10 +121,11 @@ module.exports = [
 			{pipe: `${BASE}.slave.desiredOnState`, throttle: 10 * 60 * 1000}
 		],
 		combineExpiredInputs: true,
-		combine: (masterOn, laptopOnline, tabletOnline, fpiPresent, override) =>
-			(override) ||
-			(fpiPresent !== false && (masterOn || laptopOnline || tabletOnline)) ||
-			false
+		combine: (masterOn, laptopOnline, tabletOnline, fpiPresent, override) => {
+			return (override) ||
+				(fpiPresent !== false && (masterOn || laptopOnline || tabletOnline)) ||
+				false;
+		}
 	}],
 
 	// Workstation online
