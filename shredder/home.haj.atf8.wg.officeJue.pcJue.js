@@ -25,6 +25,13 @@ module.exports = [
 		output: { 'On': `${BASE}.master.desiredOnState.switch` },
 		displayName: 'PC'
 	}],
+	[require('ftrm-gpio/switch'), {
+		name: 'pc-switch-gpio',
+		input: `${BASE}.master.actualOnState`,
+		output: `${BASE}.master.desiredOnState.switch`,
+		onGpio: 23,
+		ledGpio: 24
+	}],
 
 	// Master: Power based switch: Keep the relay on as long the PC is powered on
 	[require('ftrm-basic/map'), {
