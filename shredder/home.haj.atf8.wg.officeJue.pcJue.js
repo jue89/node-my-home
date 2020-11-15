@@ -99,7 +99,7 @@ module.exports = [
 			{pipe: `${BASE}.slave.desiredOnState`, throttle: 10 * 60 * 1000}
 		],
 		combineExpiredInputs: true,
-		combine: (masterOnState, juePresent, override) => override || (masterOnState && juePresent !== false) || false
+		combine: (masterOnState, juePresent, override) => override || (masterOnState !== false && juePresent !== false) || false
 	}],
 
 	// Workstation online
