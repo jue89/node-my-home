@@ -86,7 +86,7 @@ module.exports = [
 		interval: 60000 * 5,
 		schedule: (now, presentJue, distance, pcInUse) => {
 			// Don't turn the heating down when someone is sitting in front of the PC
-			if (pcInUse) return 20;
+			if (pcInUse) return 19;
 
 			const time = now.m / 60 + now.h;
 
