@@ -1,0 +1,6 @@
+{
+  "name": "hqcam",
+  "dependencies": {
+    "spi-device": "^3.1.0"
+  }
+}
