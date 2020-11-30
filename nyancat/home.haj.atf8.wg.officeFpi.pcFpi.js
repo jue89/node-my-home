@@ -133,6 +133,6 @@ module.exports = [
 		name: 'workstation-in-use',
 		input: `${BASE}.slave.activePower_W`,
 		output: `${BASE}.inUse`,
-		map: (x) => x > 30 // W
+		map: (x) => x > 10 // W
 	}],
 ];
