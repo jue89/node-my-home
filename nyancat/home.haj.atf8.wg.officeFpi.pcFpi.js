@@ -8,7 +8,7 @@ module.exports = [
 		output: [ {name: 'online', pipe: 'user.fpi.devices.laptopWired.online', throttle: 3 * 60 * 1000} ],
 		mac: secrets.networkDevices.fpiLaptopWired.mac,
 		timeSlot: 5000,
-		windowSize: 12, // 5.000ms * 12 = 60.000ms
+		windowSize: 24, // 5.000ms * 24 = 120.000ms
 		threshold: 0
 	}],
 
@@ -18,7 +18,7 @@ module.exports = [
 		output: [ {name: 'online', pipe: 'user.fpi.devices.tabletWired.online', throttle: 3 * 60 * 1000} ],
 		mac: secrets.networkDevices.fpiTabletWired.mac,
 		timeSlot: 5000,
-		windowSize: 12, // 5.000ms * 12 = 60.000ms
+		windowSize: 24, // 5.000ms * 24 = 120.000ms
 		threshold: 0
 	}],
 
