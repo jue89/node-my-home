@@ -80,18 +80,22 @@ module.exports = [
 		name: 'room-setpoint-scheduler',
 		input: [
 			'user.jue.present.atf8',
-			'user.fpi.present.atf8'
+			'user.fpi.present.atf8',
+			'home.haj.atf8.wg.officeFpi.pcFpi.inUse'
 		],
 		output: `${BASE}.room.desiredTemperature_degC.schedule`,
 		interval: 60000 * 5,
-		schedule: (now, presentJue, presentFpi) => {
+		schedule: (now, presentJue, presentFpi, pc) => {
+			// Someone is sitting in front of the PC -> room stays warm
+			if (pc) return 19.5;
+
 			// Nobody's home -> just keep base temp
 			if (!presentJue && !presentFpi) return 12;
 
 			// Build schedule:
 			const time = now.m / 60 + now.h;
-			const tempNight = 16;
-			const tempDay = 19;
+			const tempNight = 15;
+			const tempDay = 18;
 			const schedule = (now.dayofweek >= 6) ? [
 				// Weekend
 				[ 9, tempNight],
