@@ -2,8 +2,8 @@ const spi = require('spi-device');
 
 const BASE = __filename.slice(__dirname.length + 1, -3);
 
-const COLOR_OK = [64, 0, 128];
-const COLOR_FAIL = [255, 0, 32];
+const HUE_OK = 270;
+const HUE_FAIL = 320;
 
 const SPI_BUS = 0;
 const SPI_CS = 0;
@@ -13,51 +13,35 @@ const LED_COUNT_TOP = 15;
 
 module.exports = [
 	[require('ftrm-basic/combine'), {
-		name: 'rack-color',
+		name: 'rack-hue',
 		input: [
 			'node.bockelfelde.volumes.md0.online',
 			'node.ned.volumes.tank.online',
 			'node.srv2.volumes.md0.online',
 			'node.tony.volumes.md0.online'
 		],
-		output: `${BASE}.color_rgb`,
+		output: `${BASE}.color_hue`,
 		combineExpiredInputs: true,
 		combine: (...raids) => {
 			const ok = raids.reduce((ok, r) => ok && r !== false, true);
-			return ok ? COLOR_OK : COLOR_FAIL;
+			return ok ? HUE_OK : HUE_FAIL;
 		}
 	}],
 
-	[require('ftrm-basic/generic'), {
-		name: 'rack-leds',
-		input: `${BASE}.color_rgb`,
-		factory: (inputs) => {
-			const leds = spi.openSync(SPI_BUS, SPI_CS);
-
-			inputs[0].on('update', ([r, g, b]) => {
-				const bufClear = Buffer.from([0x00, 0x00, 0x00, 0x00]);
-				const bufColorSide = Buffer.from([0xe7, b, g, r]);
-				const bufColorTop = Buffer.from([0xff, b, g, r]);
-				const bufs = [bufClear];
-				for (let i = 0; i < LED_COUNT_SIDE; i++) {
-					bufs.push(bufColorSide);
-				}
-				for (let i = 0; i < LED_COUNT_TOP; i++) {
-					bufs.push(bufColorTop);
-				}
-				for (let i = 0; i < LED_COUNT_SIDE; i++) {
-					bufs.push(bufColorSide);
-				}
-				bufs.push(bufClear);
-				const sendBuffer = Buffer.concat(bufs);
-				leds.transfer([{
-					sendBuffer,
-					byteLength: sendBuffer.length,
-					speedHz: SPI_CLK
-				}], () => {});
-			});
-
-			return () => leds.closeSync();
-		}
+	[require('ftrm-basic/combine'), {
+		name: 'rack-color',
+		input: [`${BASE}.color_hue`, `home.haj.atf8.wg.officeJue.pcJue.inUse`],
+		output: `${BASE}.color_hsv`,
+		combine: (hue, inUse) => inUse ? [hue, 1, 1] : [hue, 1, 0.3]
 	}],
+
+	require('../_lib/sk9822.js')({
+		input: `${BASE}.color_hsv`,
+		spiFactory: () => spi.openSync(0, 0),
+		ledCount: LED_COUNT_SIDE + LED_COUNT_TOP + LED_COUNT_SIDE,
+		filter: ([h, s, v], n) => {
+			if (n < LED_COUNT_SIDE || n > LED_COUNT_SIDE + LED_COUNT_TOP) return [h, s, v * 0.3];
+			else return [h, s, v];
+		}
+	}),
 ];
