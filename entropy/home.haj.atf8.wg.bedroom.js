@@ -25,6 +25,13 @@ module.exports = [
 		gpio: 27,
 		interval: 5 * 60 * 1000
 	}],
+	[require('ftrm-basic/sliding-window'), {
+		name: 'window-sensor',
+		input: `${BASE}.window.open`,
+		output: `${BASE}.window.openedRecently`,
+		includeValue: (age) => age < 2 * 60 * 60 * 1000, // 2h
+		calcOutput: (window) => window.reduce((opened, open) => opened || open, false)
+	}],
 	[require('ftrm-homekit')('ContactSensor'), {
 		name: 'window-sensor-homekit',
 		input: {'ContactSensorState': `${BASE}.window.open`},
@@ -80,11 +87,12 @@ module.exports = [
 		name: 'room-setpoint-scheduler',
 		input: [
 			'user.jue.present.atf8',
-			'user.fpi.present.atf8'
+			'user.fpi.present.atf8',
+			`${BASE}.window.openedRecently`
 		],
 		output: `${BASE}.room.desiredTemperature_degC.schedule`,
 		interval: 60000 * 5,
-		schedule: (now, presentJue, presentFpi) => {
+		schedule: (now, presentJue, presentFpi, windowOpenedRecently) => {
 			// Nobody's home -> just keep base temp
 			if (!presentJue && !presentFpi) return 12;
 
@@ -96,8 +104,8 @@ module.exports = [
 			const schedule = (now.dayofweek >= 6) ? [
 				// Weekend
 				[ 8, tempNight],
-				[ 9, tempSleepy],
-				[11, tempSleepy],
+				[ 9, windowOpenedRecently ? tempDay : tempSleepy],
+				[11, windowOpenedRecently ? tempDay : tempSleepy],
 				[12, tempDay],
 				[20, tempDay],
 				[21, tempSleepy],
@@ -106,8 +114,8 @@ module.exports = [
 			] : [
 				// Week day
 				[ 6, tempNight],
-				[ 7, tempSleepy],
-				[10, tempSleepy],
+				[ 7, windowOpenedRecently ? tempDay : tempSleepy],
+				[10, windowOpenedRecently ? tempDay : tempSleepy],
 				[11, tempDay],
 				[20, tempDay],
 				[21, tempSleepy],
