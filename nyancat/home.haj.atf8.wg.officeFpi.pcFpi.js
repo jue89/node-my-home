@@ -7,8 +7,8 @@ module.exports = [
 		name: 'fpi-pcap-laptopWired',
 		output: [ {name: 'online', pipe: 'user.fpi.devices.laptopWired.online', throttle: 3 * 60 * 1000} ],
 		mac: secrets.networkDevices.fpiLaptopWired.mac,
-		timeSlot: 5000,
-		windowSize: 24, // 5.000ms * 24 = 120.000ms
+		timeSlot: 2000,
+		windowSize: 300, // 2000ms * 300 = 600000ms = 10min
 		threshold: 0
 	}],
 
@@ -17,8 +17,8 @@ module.exports = [
 		name: 'fpi-pcap-tabletWired',
 		output: [ {name: 'online', pipe: 'user.fpi.devices.tabletWired.online', throttle: 3 * 60 * 1000} ],
 		mac: secrets.networkDevices.fpiTabletWired.mac,
-		timeSlot: 5000,
-		windowSize: 24, // 5.000ms * 24 = 120.000ms
+		timeSlot: 2000,
+		windowSize: 300, // 2000ms * 300 = 600000ms = 10min
 		threshold: 0
 	}],
 
@@ -114,17 +114,14 @@ module.exports = [
 			{pipe: `${BASE}.master.actualOnState`},
 			{pipe: `user.fpi.devices.laptopWired.online`},
 			{pipe: `user.fpi.devices.tabletWired.online`},
-			{pipe: `user.fpi.present.atf8`},
 			{pipe: `${BASE}.slave.desiredOnState.override`}
 		],
 		output: [
 			{pipe: `${BASE}.slave.desiredOnState`, throttle: 10 * 60 * 1000}
 		],
 		combineExpiredInputs: true,
-		combine: (masterOn, laptopOnline, tabletOnline, fpiPresent, override) => {
-			return (override) ||
-				(fpiPresent !== false && (masterOn || laptopOnline || tabletOnline)) ||
-				false;
+		combine: (masterOn, laptopOnline, tabletOnline, override) => {
+			return override || masterOn || laptopOnline || tabletOnline || false;
 		}
 	}],
 
