@@ -43,7 +43,7 @@ module.exports = [
 		name: 'pc-switch-homekit',
 		input: { 'On': `${BASE}.master.actualOnState` },
 		output: { 'On': `${BASE}.master.desiredOnState.switch` },
-		displayName: 'PC'
+		displayName: 'Peter'
 	}],
 	[require('ftrm-gpio/switch'), {
 		name: 'pc-switch-gpio',
