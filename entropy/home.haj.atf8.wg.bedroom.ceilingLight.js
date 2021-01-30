@@ -19,7 +19,7 @@ module.exports = [
 		output: {
 			'Relay': {pipe: `${BASE}.actualOnState`, throttle: 10 * 60 * 1000}
 		},
-		powerReadoutInterval: 20 * 1000,
+		readbackInterval: 10 * 1000,
 		...secrets.shelly.bedroomCeilingLight
 	}]
 ];
