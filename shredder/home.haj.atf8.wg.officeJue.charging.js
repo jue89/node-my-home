@@ -5,22 +5,17 @@ module.exports = [
 	// Homekit Switch
 	[require('ftrm-homekit')('Switch'), {
 		name: 'charging-switch-homekit',
-		input: { 'On': `${BASE}.actualOnState` },
-		output: { 'On': `${BASE}.desiredOnState.homekit` },
+		input: {'On': `${BASE}.actualOnState`},
+		output: {'On': `${BASE}.desiredOnState.homekit`},
 		displayName: 'Charging Station'
 	}],
 
 	// Default state logic
-	[require('ftrm-basic/select'), {
-		name: 'charging-switch',
-		input: [
-			{pipe: `${BASE}.desiredOnState.homekit`, expire: 24 * 3600 * 1000, logLevelExpiration: null},
-			{value: false}
-		],
-		output: [
-			{pipe: `${BASE}.desiredOnState`, retransmit: 20 * 60 * 1000}
-		],
-		weight: 'prio'
+	[require('../_lib/delayedReset.js'), {
+		name: 'charging-reset',
+		input: `${BASE}.actualOnState`,
+		output: `${BASE}.desiredOnState`,
+		delay: 24 * 3600 * 1000
 	}],
 
 	// Relay
@@ -35,7 +30,8 @@ module.exports = [
 			'ApparentPower': `${BASE}.apparentPower_VA`,
 			'ReactivePower': `${BASE}.reactivePower_var`
 		},
-		powerReadoutInterval: 2 * 60 * 1000,
+		readbackInterval: 60 * 1000,
+		powerReadoutInterval: 60 * 1000,
 		...secrets.shelly.charging
 	}]
 ];
