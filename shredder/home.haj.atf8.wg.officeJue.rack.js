@@ -32,7 +32,7 @@ module.exports = [
 		name: 'rack-color',
 		input: [`${BASE}.color_hue`, `home.haj.atf8.wg.officeJue.pcJue.inUse`],
 		output: `${BASE}.color_hsv`,
-		combine: (hue, inUse) => inUse ? [hue, 1, 1] : [hue, 1, 0.3]
+		combine: (hue, inUse) => inUse ? [hue, 1, 1] : [hue, 1, 0.1]
 	}],
 
 	require('../_lib/sk9822.js')({
