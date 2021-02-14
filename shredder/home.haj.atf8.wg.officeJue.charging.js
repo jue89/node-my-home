@@ -6,7 +6,7 @@ module.exports = [
 	[require('ftrm-homekit')('Switch'), {
 		name: 'charging-switch-homekit',
 		input: {'On': `${BASE}.actualOnState`},
-		output: {'On': `${BASE}.desiredOnState.homekit`},
+		output: {'On': `${BASE}.desiredOnState`},
 		displayName: 'Charging Station'
 	}],
 
