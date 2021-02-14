@@ -1,6 +1,7 @@
 {
   "name": "hqcam",
   "dependencies": {
+    "ftrm-http": "0.0.0",
     "spi-device": "^3.1.0"
   }
 }
