@@ -1,4 +1,8 @@
+const FAILURE_TOLERANCE = 3;
+
 const childProcess = require('child_process');
+const StatefulError = require('ftrm/stateful-error');
+
 const exec = (cmd) => new Promise((resolve, reject) => childProcess.exec(cmd, {
 	timeout: 60 * 1000
 }, (err, stdout) => {
@@ -32,20 +36,45 @@ async function getLocalMacs() {
 	return tg;
 }
 
-module.exports = [[require('ftrm-basic/inject'), {
-	name: 'freifunk-client-poll',
-	output: 'home.haj.atf8.network.freifunkClients',
-	inject: () => getLocalMacs(),
-	interval: 3 * 60 * 1000
-}], [require('ftrm-http/server'), {
-	name: 'freifunk-client-rest-api',
-	input: [{
-		name: 'macs',
-		pipe: 'home.haj.atf8.network.freifunkClients',
-		convert: (v) => JSON.stringify({'ffh_clients': v || []})
-	}, {
-		name: 'temp_outdoor',
-		pipe: 'home.haj.atf8.outside.temperature_degC'
-	}],
-	port: 8081
-}]];
+module.exports = [
+	[require('ftrm-basic/generic'), {
+		name: 'freifunk-client-poll',
+		output: 'home.haj.atf8.network.freifunkClients',
+		factory: (inputs, outputs, log) => {
+			let failureCnt = 0;
+			let failure = null;
+			const safeQuery = () => getLocalMacs().then((data) => {
+				// Resolve present failures
+				if (failure) {
+					failure.resolve();
+					failure = null;
+					failureCnt = 0;
+				}
+				return data;
+			}).catch((err) => {
+				// Ignore non-repeating failures
+				if (++failureCnt < FAILURE_TOLERANCE || failure) return;
+				failure = new StatefulError(err.message);
+				log.error(failure);
+				return undefined;
+			});
+
+			const interval = setInterval(async () => {
+				const data = await safeQuery();
+				if (data) outputs[0].set(data);
+			}, 3 * 60 * 1000);
+			return () => clearInterval(interval);
+		},
+	}], [require('ftrm-http/server'), {
+		name: 'freifunk-client-rest-api',
+		input: [{
+			name: 'macs',
+			pipe: 'home.haj.atf8.network.freifunkClients',
+			convert: (v) => JSON.stringify({'ffh_clients': v || []})
+		}, {
+			name: 'temp_outdoor',
+			pipe: 'home.haj.atf8.outside.temperature_degC'
+		}],
+		port: 8081
+	}]
+];
