@@ -74,7 +74,7 @@ module.exports = [
 		name: 'pc-switch',
 		input: [
 			{pipe: `${BASE}.master.desiredOnState.switch`, expire: 50 * 1000, logLevelExpiration: null},
-			{pipe: `${BASE}.master.desiredOnState.power`, expire: 90 * 1000},
+			{pipe: `${BASE}.master.desiredOnState.power`, expire: 5 * 60 * 1000},
 			{pipe: `${BASE}.master.desiredOnState.override`},
 			{value: false}
 		],
