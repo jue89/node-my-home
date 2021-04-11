@@ -36,7 +36,7 @@ module.exports = [
 	[require('ftrm-gpio/out'), {
 		name: 'radiator-valve',
 		input: [{pipe: `${BASE}.radiator.open`, expire: 60000}],
-		gpio: 17,
+		gpio: 22,
 		default: false
 	}],
 
