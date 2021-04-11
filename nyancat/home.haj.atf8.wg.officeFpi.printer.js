@@ -1,5 +1,6 @@
 const secrets = require('../secrets.json');
 const BASE = __filename.slice(__dirname.length + 1, -3);
+const hdpClient = require('./lib/hdp.js');
 
 module.exports = [
 	// Homekit Switch
@@ -8,6 +9,17 @@ module.exports = [
 		input: {'On': `${BASE}.actualOnState`},
 		output: {'On': `${BASE}.desiredOnState`},
 		displayName: 'Printer'
+	}],
+
+	// Homie Switch
+	[require('../_lib/homieSwitch.js'), {
+		name: 'printer-switch-homie',
+		input: `${BASE}.actualOnState`,
+		output: `${BASE}.desiredOnState`,
+		hdpClient,
+		cpuid: '0e801400164350573032362d',
+		btnName: 'BTN3',
+		ledName: 'LED3'
 	}],
 
 	// HTTP API
