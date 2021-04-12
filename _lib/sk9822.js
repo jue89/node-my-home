@@ -7,16 +7,23 @@ const STEP_DURATION = 1000 / 25;
 const delay = (msec) => new Promise((resolve) => setTimeout(resolve, msec));
 
 const hsv2rgb = ([h, s, v]) => {
-	const c = v * s;
-	const x = c * (1 - Math.abs((h / 60) % 2 - 1));
-	const m = v - c;
-	const [r0, g0, b0] = (h < 60) ? [c, x, 0]
-		: (h < 120) ? [x, c, 0]
-		: (h < 180) ? [0, c, x]
-		: (h < 240) ? [0, x, c]
-		: (h < 300) ? [x, 0, c]
-		: [x, 0, c];
-	return [(r0 + m) * 255, (g0 + m) * 255, (b0 + m) * 255];
+	const i = Math.floor(h / 60);
+	const f = h / 60 - i;
+	const p = v * (1 - s);
+	const q = v * (1 - f * s);
+	const t = v * (1 - (1 - f) * s);
+
+	let r, g, b;
+	switch (i % 6) {
+		case 0: r = v, g = t, b = p; break;
+		case 1: r = q, g = v, b = p; break;
+		case 2: r = p, g = v, b = t; break;
+		case 3: r = p, g = q, b = v; break;
+		case 4: r = t, g = p, b = v; break;
+		case 5: r = v, g = p, b = q; break;
+	}
+
+	return [ r * 255, g * 255, b * 255 ];
 };
 
 const bufClear = Buffer.from([0x00, 0x00, 0x00, 0x00]);

@@ -3,7 +3,7 @@ const spi = require('spi-device');
 const BASE = __filename.slice(__dirname.length + 1, -3);
 
 const HUE_OK = 270;
-const HUE_FAIL = 320;
+const HUE_FAIL = 350;
 
 const SPI_BUS = 0;
 const SPI_CS = 0;
