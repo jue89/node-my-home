@@ -25,13 +25,9 @@ module.exports = [
 			'Relay': `${BASE}.desiredOnState`
 		},
 		output: {
-			'Relay': `${BASE}.actualOnState`,
-			'Power': `${BASE}.activePower_W`,
-			'ApparentPower': `${BASE}.apparentPower_VA`,
-			'ReactivePower': `${BASE}.reactivePower_var`
+			'Relay': `${BASE}.actualOnState`
 		},
 		readbackInterval: 60 * 1000,
-		powerReadoutInterval: 60 * 1000,
 		...secrets.shelly.charging
 	}]
 ];
