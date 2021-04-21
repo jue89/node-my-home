@@ -5,7 +5,7 @@ function check (opts) {
 	assert(opts.cpuid, 'cpuid missing');
 	assert(opts.btnName, 'btnName missing');
 	assert(opts.ledName, 'ledName missing');
-	if (opts.brightnessOff === undefined) opts.brightnessOff = 32;
+	if (opts.brightnessOff === undefined) opts.brightnessOff = 64;
 	if (opts.brightnessOn === undefined) opts.brightnessOn = 255;
 }
 
