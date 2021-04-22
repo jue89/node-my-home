@@ -1,12 +1,11 @@
 const assert = require('assert');
 const {EventEmitter} = require('events');
-const {hsv2rgb, rgb2hsv} = require('./color.js');
+const {hsv2rgb} = require('./color.js');
 
 
 class Color extends EventEmitter {
-	constructor (hsv = [0, 0, 0]) {
+	constructor (hsv = [0, 0, 100]) {
 		super();
-		this._rgb = [0, 0, 0];
 		this._hsv = hsv;
 		this._rgb = hsv2rgb(this._hsv);
 		this._on = false
@@ -62,12 +61,13 @@ async function factory (opts, inputs, outputs) {
 	const hdpClient = await opts.hdpClient();
 	const hdpDevice = await hdpClient.get(opts.cpuid);
 	const hdpEpLed = hdpDevice.get(opts.ledName);
+	const dim = hdpEpLed.get().length;
 
 	const color = new Color();
 
 	// Ensure the LED always mirrors the current color
-	const updateLed = () => hdpEpLed.set(color.getOnState() ? color.getRGB(): [0, 0, 0]);
-	hdpEpLed.on('change', updateLed);
+	const updateLed = () => hdpEpLed.set((color.getOnState() ? color.getRGB() : [0, 0, 0]).slice(0, dim));
+	hdpEpLed.on('update', updateLed);
 	color.on('change', updateLed);
 
 	// Wire outputs
@@ -79,19 +79,19 @@ async function factory (opts, inputs, outputs) {
 	// Wire inputs
 	if (inputs.h) {
 		inputs.h.on('change', (h) => color.setHue(h));
-		color.setHue(inputs.h.value || 0);
+		if (inputs.h.value !== undefined) color.setHue(inputs.h.value);
 	}
 	if (inputs.s) {
 		inputs.s.on('change', (s) => color.setSaturation(s));
-		color.setSaturation(inputs.s.value || 0);
+		if (inputs.s.value !== undefined) color.setSaturation(inputs.s.value);
 	}
 	if (inputs.v) {
 		inputs.v.on('change', (v) => color.setBrightness(v));
-		color.setBrightness(inputs.v.value || 0);
+		if (inputs.v.value !== undefined) color.setBrightness(inputs.v.value);
 	}
 	if (inputs.on) {
 		inputs.on.on('change', (on) => color.setOnState(on));
-		color.setOnState(!!inputs.on.value);
+		if (inputs.on.value !== undefined) color.setOnState(inputs.on.value);
 	}
 
 	return () => hdpClient.close();
