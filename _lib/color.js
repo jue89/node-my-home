@@ -17,7 +17,7 @@ function hsv2rgb ([h, s, v]) {
 		case 5: r = v, g = p, b = q; break;
 	}
 
-	return [ r * 255, g * 255, b * 255 ];
+	return [ r * 255, g * 255, b * 255 ].map(Math.round);
 };
 
 function rgb2hsv ([r, g, b]) {
@@ -59,7 +59,7 @@ function rgb2hsv ([r, g, b]) {
 		}
 	}
 
-	return [ h * 360, s * 100, v * 100 ];
+	return [ h * 360, s * 100, v * 100 ].map(Math.round);
 }
 
 module.exports = { hsv2rgb, rgb2hsv };
