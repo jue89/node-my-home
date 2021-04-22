@@ -13,6 +13,6 @@ module.exports = [
 		name: 'color',
 		input: `home.haj.atf8.wg.officeJue.pcJue.inUse`,
 		output: `${BASE}.color_hsv`,
-		map: (inUse) => inUse ? [270, 1, 0.5] : [0, 0, 0]
+		map: (inUse) => inUse ? [270, 100, 50] : [0, 0, 0]
 	}],
 ]

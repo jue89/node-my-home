@@ -1,4 +1,6 @@
 function hsv2rgb ([h, s, v]) {
+	s /= 100;
+	v /= 100;
 	const i = Math.floor(h / 60);
 	const f = h / 60 - i;
 	const p = v * (1 - s);
@@ -60,4 +62,5 @@ function rgb2hsv ([r, g, b]) {
 	return [ h * 360, s * 100, v * 100 ];
 }
 
-module.export = { hsv2rgb, rgb2hsv };
+module.exports = { hsv2rgb, rgb2hsv };
+
