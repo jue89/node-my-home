@@ -3,7 +3,7 @@
   "dependencies": {
     "ftrm-ctrl": "git+https://github.com/Footurama/ftrm-ctrl.git#8b79f1141e04fc569c55ee02b343dea51363093d",
     "ftrm-gpio": "git+https://github.com/Footurama/ftrm-gpio.git#849f363e349f650d8cc0544815233be5862cf29d",
-    "ftrm-homekit": "git+https://github.com/Footurama/ftrm-homekit.git#f4a14ec77cccbc71f8027a3963ee0d854bd58154",
+    "ftrm-homekit": "git+https://github.com/Footurama/ftrm-homekit.git#2cc263721508af1dd880328f0256db67e2bd6724",
     "ftrm-sensors": "0.0.0",
     "linterpol": "^1.0.0",
     "spi-device": "^3.1.0"
