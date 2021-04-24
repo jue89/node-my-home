@@ -115,6 +115,7 @@ module.exports = [
 		name: 'periph-switch',
 		input: [
 			{pipe: `${BASE}.master.actualOnState`},
+			{pipe: `${BASE}.dock.actualOnState`},
 			{pipe: `user.fpi.devices.laptopWired.online`},
 			{pipe: `user.fpi.devices.tabletWired.online`},
 			{pipe: `${BASE}.slave.desiredOnState.override`}
@@ -123,8 +124,8 @@ module.exports = [
 			{pipe: `${BASE}.slave.desiredOnState`, throttle: 10 * 60 * 1000}
 		],
 		combineExpiredInputs: true,
-		combine: (masterOn, laptopOnline, tabletOnline, override) => {
-			return override || masterOn || laptopOnline || tabletOnline || false;
+		combine: (masterOn, dockOn, laptopOnline, tabletOnline, override) => {
+			return override || masterOn || dockOn || laptopOnline || tabletOnline || false;
 		}
 	}],
 
@@ -135,4 +136,53 @@ module.exports = [
 		output: `${BASE}.inUse`,
 		map: (x) => x > 10 // W
 	}],
+
+	// Dock: Relay
+	[require('../_lib/shellyPlug.js'), {
+		name: 'dock-relay',
+		input: {
+			'Relay': `${BASE}.dock.desiredOnState`
+		},
+		output: {
+			'Relay': `${BASE}.dock.actualOnState`,
+			'Power': `${BASE}.dock.activePower_W`,
+			'ApparentPower': `${BASE}.dock.apparentPower_VA`,
+			'ReactivePower': `${BASE}.dock.reactivePower_var`
+		},
+		powerReadoutInterval: 20 * 1000,
+		...secrets.shelly.fpiDock
+	}],
+
+	// Dock: Switches
+	[require('ftrm-homekit')('Switch'), {
+		name: 'dock-switch-homekit',
+		input: { 'On': `${BASE}.dock.actualOnState` },
+		output: { 'On': `${BASE}.dock.desiredOnState` },
+		displayName: 'PC Override'
+	}],
+	[require('../_lib/homieSwitch.js'), {
+		name: 'dock-switch-homie',
+		input: `${BASE}.dock.actualOnState`,
+		output: `${BASE}.dock.desiredOnState`,
+		hdpClient,
+		cpuid: '0e801400164350573032362d',
+		btnName: 'BTN1',
+		ledName: 'LED1'
+	}],
+
+	// Docker: Power analysis
+	[require('ftrm-basic/sliding-window'), {
+		input: `${BASE}.dock.activePower_W`,
+		output: `${BASE}.dock.activePowerAvg_W`,
+		includeValue: (age, index) => age < 3 * 60 * 1000, // Keep all values of 3 minutes
+		calcOutput: (window) => window.reduce((avg, value) => svg + value / window.length, 0)
+	}],
+	[require('ftrm-basic/edge-detection'), {
+		input: `${BASE}.dock.activePowerAvg_W`,
+		output: `${BASE}.dock.desiredOnState`,
+		detectors: [{
+			match: (from, to) => from > 8 && to < 8, // Consuming less than 8W
+			output: false                            // -> Turn off
+		}]
+	}]
 ];
