@@ -3,26 +3,6 @@ const BASE = __filename.slice(__dirname.length + 1, -3);
 const hdpClient = require('./lib/hdp.js');
 
 module.exports = [
-	// Laptop is connected with wired home network
-	[require('ftrm-tracking/pcap'), {
-		name: 'fpi-pcap-laptopWired',
-		output: [ {name: 'online', pipe: 'user.fpi.devices.laptopWired.online', throttle: 3 * 60 * 1000} ],
-		mac: secrets.networkDevices.fpiLaptopWired.mac,
-		timeSlot: 2000,
-		windowSize: 300, // 2000ms * 300 = 600000ms = 10min
-		threshold: 0
-	}],
-
-	// Tablet is connected with wired home network
-	[require('ftrm-tracking/pcap'), {
-		name: 'fpi-pcap-tabletWired',
-		output: [ {name: 'online', pipe: 'user.fpi.devices.tabletWired.online', throttle: 3 * 60 * 1000} ],
-		mac: secrets.networkDevices.fpiTabletWired.mac,
-		timeSlot: 2000,
-		windowSize: 300, // 2000ms * 300 = 600000ms = 10min
-		threshold: 0
-	}],
-
 	// Master: Relay
 	[require('../_lib/shellyPlug.js'), {
 		name: 'pc-relay',
@@ -116,16 +96,14 @@ module.exports = [
 		input: [
 			{pipe: `${BASE}.master.actualOnState`},
 			{pipe: `${BASE}.dock.actualOnState`},
-			{pipe: `user.fpi.devices.laptopWired.online`},
-			{pipe: `user.fpi.devices.tabletWired.online`},
 			{pipe: `${BASE}.slave.desiredOnState.override`}
 		],
 		output: [
 			{pipe: `${BASE}.slave.desiredOnState`, throttle: 10 * 60 * 1000}
 		],
 		combineExpiredInputs: true,
-		combine: (masterOn, dockOn, laptopOnline, tabletOnline, override) => {
-			return override || masterOn || dockOn || laptopOnline || tabletOnline || false;
+		combine: (masterOn, dockOn, override) => {
+			return override || masterOn || dockOn || false;
 		}
 	}],
 
@@ -158,7 +136,7 @@ module.exports = [
 		name: 'dock-switch-homekit',
 		input: { 'On': `${BASE}.dock.actualOnState` },
 		output: { 'On': `${BASE}.dock.desiredOnState` },
-		displayName: 'PC Override'
+		displayName: 'Dock'
 	}],
 	[require('../_lib/homieSwitch.js'), {
 		name: 'dock-switch-homie',
@@ -172,12 +150,14 @@ module.exports = [
 
 	// Docker: Power analysis
 	[require('ftrm-basic/sliding-window'), {
+		name: 'dock-power-avg',
 		input: `${BASE}.dock.activePower_W`,
 		output: `${BASE}.dock.activePowerAvg_W`,
 		includeValue: (age, index) => age < 3 * 60 * 1000, // Keep all values of 3 minutes
-		calcOutput: (window) => window.reduce((avg, value) => svg + value / window.length, 0)
+		calcOutput: (window) => window.reduce((avg, value) => avg + value / window.length, 0)
 	}],
 	[require('ftrm-basic/edge-detection'), {
+		name: 'dock-power-avg-switch',
 		input: `${BASE}.dock.activePowerAvg_W`,
 		output: `${BASE}.dock.desiredOnState`,
 		detectors: [{
