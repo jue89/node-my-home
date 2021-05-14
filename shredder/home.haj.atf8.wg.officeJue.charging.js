@@ -21,11 +21,16 @@ module.exports = [
 	}],
 
 	// Default state logic
-	[require('../_lib/delayedReset.js'), {
+	[require('ftrm-basic/edge-detection'), {
 		name: 'charging-reset',
 		input: `${BASE}.actualOnState`,
 		output: `${BASE}.desiredOnState`,
-		delay: 24 * 3600 * 1000
+		retriggerDetectors: true,
+		detectors: [{
+			match: (from, to) => from !== true && to === true,
+			output: false,
+			delay: 24 * 3600 * 1000
+		}],
 	}],
 
 	// Relay
