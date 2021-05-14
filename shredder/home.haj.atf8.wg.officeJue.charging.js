@@ -1,13 +1,23 @@
 const secrets = require('../secrets.json');
 const BASE = __filename.slice(__dirname.length + 1, -3);
+const hdpClient = require('./lib/hdp.js');
 
 module.exports = [
-	// Homekit Switch
+	// Switch
 	[require('ftrm-homekit')('Switch'), {
 		name: 'charging-switch-homekit',
 		input: {'On': `${BASE}.actualOnState`},
 		output: {'On': `${BASE}.desiredOnState`},
 		displayName: 'Charging Station'
+	}],
+	[require('../_lib/homieSwitch.js'), {
+		name: 'charging-switch-homie',
+		input: `${BASE}.actualOnState`,
+		output: `${BASE}.desiredOnState`,
+		hdpClient,
+		cpuid: '0100260011434b5237363620',
+		btnName: 'BTN3',
+		ledName: 'LED3'
 	}],
 
 	// Default state logic
