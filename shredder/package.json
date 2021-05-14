@@ -5,6 +5,7 @@
     "ftrm-gpio": "git+https://github.com/Footurama/ftrm-gpio.git#849f363e349f650d8cc0544815233be5862cf29d",
     "ftrm-homekit": "git+https://github.com/Footurama/ftrm-homekit.git#2cc263721508af1dd880328f0256db67e2bd6724",
     "ftrm-sensors": "0.0.0",
+    "homie-dgram": "^0.1.1",
     "linterpol": "^1.0.0",
     "spi-device": "^3.1.0"
   }

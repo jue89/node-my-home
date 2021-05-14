@@ -1,5 +1,6 @@
 const secrets = require('../secrets.json');
 const BASE = __filename.slice(__dirname.length + 1, -3);
+const hdpClient = require('./lib/hdp.js');
 
 module.exports = [
 	// Master: Relay
@@ -31,6 +32,15 @@ module.exports = [
 		output: `${BASE}.master.desiredOnState.switch`,
 		onGpio: 23,
 		ledGpio: 24
+	}],
+	[require('../_lib/homieSwitch.js'), {
+		name: 'pc-switch-homie',
+		input: `${BASE}.master.actualOnState`,
+		output: `${BASE}.master.desiredOnState.switch`,
+		hdpClient,
+		cpuid: '0100260011434b5237363620',
+		btnName: 'BTN1',
+		ledName: 'LED1'
 	}],
 
 	// Master: Power based switch: Keep the relay on as long the PC is powered on
