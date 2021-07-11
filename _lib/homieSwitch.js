@@ -21,7 +21,7 @@ async function factory (opts, inputs, outputs) {
 	hdpEpLed.on('change', updateLed);
 	function updateLed () {
 		const brightness = state ? opts.brightnessOn : opts.brightnessOff;
-		hdpEpLed.set([brightness]);
+		hdpEpLed.set(brightness);
 	};
 
 	// Set initial state
