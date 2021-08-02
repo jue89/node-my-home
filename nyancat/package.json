@@ -7,7 +7,7 @@
     "ftrm-http": "0.0.0",
     "ftrm-sensors": "0.0.0",
     "ftrm-tracking": "git+https://github.com/Footurama/ftrm-tracking.git#3968fa251ade134bfdc83389f6ae08cc238600e6",
-    "homie-dgram": "^0.1.1",
+    "homie-dgram": "git+https://github.com/jue89/node-homie-dgram.git#2d3a8c918f681cf9c2d3ea2d010279afe04ca1d5",
     "linterpol": "^1.0.0"
   }
 }
