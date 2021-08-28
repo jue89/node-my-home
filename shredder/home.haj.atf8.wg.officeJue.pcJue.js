@@ -114,7 +114,7 @@ module.exports = [
 	[require('../_lib/shellyPlug.js'), {
 		name: 'periph-relay',
 		input: {
-			'Relay': `${BASE}.in-use`
+			'Relay': `${BASE}.inUse`
 		},
 		output: {
 			'Relay': `${BASE}.slave.actualOnState`,

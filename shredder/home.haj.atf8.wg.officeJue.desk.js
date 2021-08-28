@@ -28,10 +28,10 @@ module.exports = [
 	// - turn off if the PC isn't in use anymore
 	[require('ftrm-basic/edge-detection'), {
 		name: 'desk-lamp-inuse-off',
-		input: 'home.haj.atf8.wg.officeJue.pcJue.in-use',
+		input: 'home.haj.atf8.wg.officeJue.pcJue.inUse',
 		output: `${BASE}.deskLamp.desiredOnState`,
 		detectors: [
-			{match: 'falling-edge', output: false}
+			{match: (from, to) => from === true && to === false, output: false}
 		]
 	}],
 ];
