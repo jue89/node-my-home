@@ -3,7 +3,61 @@ const BASE = __filename.slice(__dirname.length + 1, -3);
 const hdpClient = require('./lib/hdp.js');
 
 module.exports = [
-	// Master: Relay
+	// State switch whether the PC is in use:
+	// - Homie switch at the door
+	[require('../_lib/homieSwitch.js'), {
+		name: 'inuse-switch-door',
+		input: `${BASE}.inUse`,
+		output: `${BASE}.inUse`,
+		hdpClient,
+		cpuid: '0100260011434b5237363620',
+		btnName: 'BTN1',
+		ledName: 'LED1'
+	}],
+	// - Homie switch at the desk
+	[require('../_lib/homieSwitch.js'), {
+		name: 'inuse-switch-desk',
+		input: `${BASE}.inUse`,
+		output: `${BASE}.inUse`,
+		hdpClient,
+		cpuid: '37ffd3054d53313911752243',
+		btnName: 'BTN3',
+		ledName: 'LED3',
+		brightnessOff: [128, 0, 0],
+		brightnessOn: [0, 255, 0],
+	}],
+	// - Homekit switch
+	[require('ftrm-homekit')('Switch'), {
+		name: 'inuse-switch-homekit',
+		input: { 'On': `${BASE}.inUse` },
+		output: { 'On': `${BASE}.inUse` },
+		displayName: 'PC'
+	}],
+	// - Turn off once leaving the flat
+	[require('ftrm-basic/edge-detection'), {
+		name: 'inuse-edge-leaving',
+		input: 'user.jue.present.atf8',
+		output: `${BASE}.inUse`,
+		detectors: [
+			{match: 'falling-edge', output: false}
+		]
+	}],
+	// - Keep track of the PC relay
+	[require('ftrm-basic/edge-detection'), {
+		name: 'inuse-edge-pc',
+		input: `${BASE}.master.actualOnState`,
+		output: `${BASE}.inUse`,
+		detectors: [
+			// - Read back last in-use state on start by looking at the PC relay
+			{match: (from, to) => from === undefined && to === true, output: true},
+			{match: (from, to) => from === undefined && to === false, output: false},
+			// - Turn of with the PC relay turning off
+			{match: (from, to) => from === true && to === false, output: false},
+		]
+	}],
+
+	// PC
+	// - Relay
 	[require('../_lib/shellyPlug.js'), {
 		name: 'pc-relay',
 		input: {
@@ -18,32 +72,7 @@ module.exports = [
 		powerReadoutInterval: 20 * 1000,
 		...secrets.shelly.pcJueMaster
 	}],
-
-	// Master: Power switch
-	[require('ftrm-homekit')('Switch'), {
-		name: 'pc-switch-homekit',
-		input: { 'On': `${BASE}.master.actualOnState` },
-		output: { 'On': `${BASE}.master.desiredOnState.switch` },
-		displayName: 'PC'
-	}],
-	[require('ftrm-gpio/switch'), {
-		name: 'pc-switch-gpio',
-		input: `${BASE}.master.actualOnState`,
-		output: `${BASE}.master.desiredOnState.switch`,
-		onGpio: 23,
-		ledGpio: 24
-	}],
-	[require('../_lib/homieSwitch.js'), {
-		name: 'pc-switch-homie',
-		input: `${BASE}.master.actualOnState`,
-		output: `${BASE}.master.desiredOnState.switch`,
-		hdpClient,
-		cpuid: '0100260011434b5237363620',
-		btnName: 'BTN1',
-		ledName: 'LED1'
-	}],
-
-	// Master: Power based switch: Keep the relay on as long the PC is powered on
+	// - Keep on if it consumes power
 	[require('ftrm-basic/map'), {
 		name: 'pc-switch-power',
 		input: `${BASE}.master.activePower_W`,
@@ -51,15 +80,22 @@ module.exports = [
 		// true -> Keep power on; undefined -> Ask someone else ...
 		map: (pwr) => (pwr > 15) ? true : undefined
 	}],
-
-	// Master: Override switch: Keeps the PC powered on - no matter whats going on
+	// - Turn on if in-use switches on
+	[require('ftrm-basic/edge-detection'), {
+		name: 'pc-inuse-edge',
+		input: `${BASE}.inUse`,
+		output: `${BASE}.master.desiredOnState.switch`,
+		detectors: [
+			{match: 'rising-edge', output: true}
+		]
+	}],
+	// - Override homekit button
 	[require('ftrm-homekit')('Switch'), {
 		name: 'pc-switch-override',
 		output: { 'On': `${BASE}.master.desiredOnState.override` },
 		displayName: 'PC Override'
 	}],
-
-	// Master: Select the power on state based
+	// - Find the desired on state
 	[require('ftrm-basic/select'), {
 		name: 'pc-switch',
 		input: [
@@ -74,11 +110,11 @@ module.exports = [
 		weight: 'prio'
 	}],
 
-	// Slave: Relay
+	// Peripheral relay
 	[require('../_lib/shellyPlug.js'), {
 		name: 'periph-relay',
 		input: {
-			'Relay': `${BASE}.slave.desiredOnState`
+			'Relay': `${BASE}.in-use`
 		},
 		output: {
 			'Relay': `${BASE}.slave.actualOnState`,
@@ -88,35 +124,5 @@ module.exports = [
 		},
 		powerReadoutInterval: 20 * 1000,
 		...secrets.shelly.pcJueSlave
-	}],
-
-	// Slave: Override switch: Keeps the PC powered on - no matter whats going on
-	[require('ftrm-homekit')('Switch'), {
-		name: 'periph-switch-override',
-		output: { 'On': `${BASE}.slave.desiredOnState.override` },
-		displayName: 'PC Periph Override'
-	}],
-
-	// Slave: Select the power on state based
-	[require('ftrm-basic/combine'), {
-		name: 'periph-switch',
-		input: [
-			{pipe: `${BASE}.master.actualOnState`},
-			{pipe: `user.jue.present.atf8`},
-			{pipe: `${BASE}.slave.desiredOnState.override`}
-		],
-		output: [
-			{pipe: `${BASE}.slave.desiredOnState`, throttle: 10 * 60 * 1000}
-		],
-		combineExpiredInputs: true,
-		combine: (masterOnState, juePresent, override) => override || (masterOnState !== false && juePresent !== false) || false
-	}],
-
-	// Workstation online
-	[require('ftrm-basic/map'), {
-		name: 'workstation-in-use',
-		input: `${BASE}.slave.activePower_W`,
-		output: `${BASE}.inUse`,
-		map: (x) => x > 30 // W
 	}],
 ];
