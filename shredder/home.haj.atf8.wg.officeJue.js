@@ -1,7 +1,37 @@
 const BASE = __filename.slice(__dirname.length + 1, -3);
 const linterpol = require('linterpol');
+const secrets = require('../secrets.json');
+const hdpClient = require('./lib/hdp.js');
 
 module.exports = [
+	// Ceiling light:
+	// - relay
+	[require('../_lib/shelly2.js'), {
+		name: 'shelly-ceilingLight',
+		input: {
+			'Relay1': `${BASE}.ceilingLight.desiredOnState`,
+			'Relay2': 'home.haj.atf8.wg.lobby.ceilingLight.desiredOnSate'
+		},
+		output: {
+			'Relay1': `${BASE}.ceilingLight.actualOnState`,
+			'Relay2': 'home.haj.atf8.wg.lobby.ceilingLight.actualOnSate'
+		},
+		readbackInterval: 5 * 1000,
+		...secrets.shelly.jueCeilingLight
+	}],
+	// - switch at the desk
+	[require('../_lib/homieSwitch.js'), {
+		name: 'ceilingLight-switch',
+		input: `${BASE}.ceilingLight.actualOnState`,
+		output: `${BASE}.ceilingLight.desiredOnState`,
+		hdpClient,
+		cpuid: '37ffd3054d53313911752243',
+		btnName: 'BTN1',
+		ledName: 'LED1',
+		brightnessOff: [128, 0, 0],
+		brightnessOn: [0, 255, 0],
+	}],
+
 	// Sensors:
 	// - room temperature
 	[require('ftrm-sensors/w1therm'), {
