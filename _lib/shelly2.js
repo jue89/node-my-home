@@ -60,7 +60,6 @@ function factory (opts, input, output, log) {
 
 	// Relay state readback
 	async function publishRelayState () {
-		if (!output.Relay) return;
 		const body = await safeQueryShelly('State');
 		if (!body) return;
 		if (output.Relay1) output.Relay1.value = body.POWER1 === 'ON';
