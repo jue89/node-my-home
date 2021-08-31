@@ -39,7 +39,7 @@ module.exports = [
 	[require('../_lib/homieSwitch.js'), {
 		name: 'printer-switch',
 		input: `home.haj.atf8.wg.officeFpi.printer.actualOnState`,
-		output: `home.haj.atf8.wg.officeFpi.printer.desiredOnState`,
+		output: `home.haj.atf8.wg.officeFpi.printer.desiredOnState.switch`,
 		hdpClient,
 		cpuid: '37ffd3054d53313911752243',
 		btnName: 'BTN4',
