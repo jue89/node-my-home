@@ -78,7 +78,7 @@ module.exports = [
 		input: `${BASE}.master.activePower_W`,
 		output: `${BASE}.master.desiredOnState.power`,
 		// true -> Keep power on; undefined -> Ask someone else ...
-		map: (pwr) => (pwr > 15) ? true : undefined
+		map: (pwr) => (pwr > 30) ? true : undefined
 	}],
 	// - Turn on if in-use switches on
 	[require('ftrm-basic/edge-detection'), {
