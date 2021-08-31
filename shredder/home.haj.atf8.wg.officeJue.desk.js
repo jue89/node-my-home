@@ -34,4 +34,17 @@ module.exports = [
 			{match: (from, to) => from === true && to === false, output: false}
 		]
 	}],
+
+	// Printer
+	[require('../_lib/homieSwitch.js'), {
+		name: 'printer-switch',
+		input: `home.haj.atf8.wg.officeFpi.printer.actualOnState`,
+		output: `home.haj.atf8.wg.officeFpi.printer.desiredOnState`,
+		hdpClient,
+		cpuid: '37ffd3054d53313911752243',
+		btnName: 'BTN4',
+		ledName: 'LED4',
+		brightnessOff: [128, 0, 0],
+		brightnessOn: [0, 255, 0],
+	}],
 ];
