@@ -135,17 +135,24 @@ module.exports = [
 	[require('ftrm-homekit')('Switch'), {
 		name: 'dock-switch-homekit',
 		input: { 'On': `${BASE}.dock.actualOnState` },
-		output: { 'On': `${BASE}.dock.desiredOnState` },
+		output: { 'On': `${BASE}.dock.desiredOnState.switch` },
 		displayName: 'Dock'
 	}],
 	[require('../_lib/homieSwitch.js'), {
 		name: 'dock-switch-homie',
 		input: `${BASE}.dock.actualOnState`,
-		output: `${BASE}.dock.desiredOnState`,
+		output: `${BASE}.dock.desiredOnState.switch`,
 		hdpClient,
 		cpuid: '0e801400164350573032362d',
 		btnName: 'BTN1',
 		ledName: 'LED1'
+	}],
+
+	// Dock: Override switch: Keeps the PC powered on - no matter whats going on
+	[require('ftrm-homekit')('Switch'), {
+		name: 'dock-switch-override',
+		output: { 'On': `${BASE}.dock.desiredOnState.override` },
+		displayName: 'Dock Override'
 	}],
 
 	// Docker: Power analysis
@@ -156,13 +163,25 @@ module.exports = [
 		includeValue: (age, index) => age < 3 * 60 * 1000, // Keep all values of 3 minutes
 		calcOutput: (window) => window.reduce((avg, value) => avg + value / window.length, 0)
 	}],
-	[require('ftrm-basic/edge-detection'), {
+	[require('ftrm-basic/map'), {
 		name: 'dock-power-avg-switch',
 		input: `${BASE}.dock.activePowerAvg_W`,
-		output: `${BASE}.dock.desiredOnState`,
-		detectors: [{
-			match: (from, to) => from > 8 && to < 8, // Consuming less than 8W
-			output: false                            // -> Turn off
-		}]
+		output: `${BASE}.dock.desiredOnState.power`,
+		map: (pwr) => (pwr > 8) ? true : undefined
+	}],
+
+	// Dock: Select the power on state
+	[require('ftrm-basic/select'), {
+		name: 'dock-switch',
+		input: [
+			{pipe: `${BASE}.dock.desiredOnState.switch`, expire: 3 * 60 * 1000, logLevelExpiration: null},
+			{pipe: `${BASE}.dock.desiredOnState.power`, expire: 5 * 60 * 1000},
+			{pipe: `${BASE}.dock.desiredOnState.override`},
+			{value: false}
+		],
+		output: [
+			{pipe: `${BASE}.dock.desiredOnState`, throttle: 10 * 60 * 1000}
+		],
+		weight: 'prio'
 	}]
 ];
