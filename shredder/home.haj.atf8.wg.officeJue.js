@@ -31,6 +31,13 @@ module.exports = [
 		brightnessOff: [128, 0, 0],
 		brightnessOn: [0, 255, 0],
 	}],
+	// - Homekit switch
+	[require('ftrm-homekit')('Switch'), {
+		name: 'ceilingLight-homekit',
+		input: {'On': `${BASE}.ceilingLight.actualOnState`},
+		output: {'On': `${BASE}.ceilingLight.desiredOnState`},
+		displayName: 'Ceiling Light'
+	}],
 
 	// Sensors:
 	// - room temperature
