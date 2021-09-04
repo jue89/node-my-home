@@ -10,11 +10,11 @@ module.exports = [
 		name: 'shelly-ceilingLight',
 		input: {
 			'Relay1': `${BASE}.ceilingLight.desiredOnState`,
-			'Relay2': 'home.haj.atf8.wg.lobby.ceilingLight.desiredOnSate'
+			'Relay2': 'home.haj.atf8.wg.lobby.ceilingLight.desiredOnState'
 		},
 		output: {
 			'Relay1': `${BASE}.ceilingLight.actualOnState`,
-			'Relay2': 'home.haj.atf8.wg.lobby.ceilingLight.actualOnSate'
+			'Relay2': 'home.haj.atf8.wg.lobby.ceilingLight.actualOnState'
 		},
 		readbackInterval: 5 * 1000,
 		...secrets.shelly.jueCeilingLight
@@ -36,6 +36,13 @@ module.exports = [
 		name: 'ceilingLight-homekit',
 		input: {'On': `${BASE}.ceilingLight.actualOnState`},
 		output: {'On': `${BASE}.ceilingLight.desiredOnState`},
+		displayName: 'Ceiling Light'
+	}],
+	// - Homekit switch
+	[require('ftrm-homekit')('Switch'), {
+		name: 'ceilingLight-homekit',
+		input: {'On': 'home.haj.atf8.wg.lobby.ceilingLight.actualOnState'},
+		output: {'On': 'home.haj.atf8.wg.lobby.ceilingLight.desiredOnState'},
 		displayName: 'Ceiling Light'
 	}],
 
