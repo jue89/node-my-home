@@ -25,6 +25,13 @@ module.exports = [
 		brightnessOff: [128, 0, 0],
 		brightnessOn: [0, 255, 0],
 	}],
+	// - Homekit switch
+	[require('ftrm-homekit')('Switch'), {
+		name: 'desk-lamp-homekit',
+		input: {'On': `${BASE}.deskLamp.actualOnState`},
+		output: {'On': `${BASE}.deskLamp.desiredOnState`},
+		displayName: 'Desk Lamp'
+	}],
 	// - turn off if the PC isn't in use anymore
 	[require('ftrm-basic/edge-detection'), {
 		name: 'desk-lamp-inuse-off',
