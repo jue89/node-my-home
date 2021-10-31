@@ -7,7 +7,7 @@ const POWER_ENDPOINTS = ['Power', 'ApparentPower', 'ReactivePower'];
 
 const delay = (msec) => new Promise((resolve) => setTimeout(resolve, msec));
 
-function shellyFacotry ({host, user, password}) {
+function shellyFacotry ({host, user, password, referer}) {
 	let baseurl = `http://${host}/cm?`;
 	if (user) baseurl += `user=${user}&`;
 	if (password) baseurl += `password=${password}&`;
@@ -15,19 +15,26 @@ function shellyFacotry ({host, user, password}) {
 
 	const sem = qsem(1);
 
-	return (cmd) => sem.limit(() => new Promise((resolve, reject) => http.get(url.parse(baseurl + cmd), (res) => {
-		const chunks = [];
-		res.on('data', (chunk) => chunks.push(chunk));
-		res.on('end', () => {
-			const body = Buffer.concat(chunks).toString();
-			if (res.statusCode === 200) {
-				const response = JSON.parse(body);
-				resolve(response);
-			} else {
-				reject(new Error(body));
-			}
-		});
-	}).on('error', (err) => reject(err))));
+	return (cmd) => sem.limit(() => new Promise((resolve, reject) => {
+		const opts = url.parse(baseurl + cmd);
+		opts.headers = {
+			'Referer': referer || `${opts.protocol}//${opts.host}`
+		};
+
+		http.get(opts, (res) => {
+			const chunks = [];
+			res.on('data', (chunk) => chunks.push(chunk));
+			res.on('end', () => {
+				const body = Buffer.concat(chunks).toString();
+				if (res.statusCode === 200) {
+					const response = JSON.parse(body);
+					resolve(response);
+				} else {
+					reject(new Error(body));
+				}
+			});
+		}).on('error', (err) => reject(err))
+	}));
 }
 
 function check (opts) {
