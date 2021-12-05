@@ -167,7 +167,7 @@ module.exports = [
 		name: 'dock-power-avg-switch',
 		input: `${BASE}.dock.activePowerAvg_W`,
 		output: `${BASE}.dock.desiredOnState.power`,
-		map: (pwr) => (pwr > 8) ? true : undefined
+		map: (pwr) => (pwr > 3) ? true : undefined
 	}],
 
 	// Dock: Select the power on state
