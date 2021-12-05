@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "ftrm": "^1.0.0",
-    "ftrm-basic": "git+https://github.com/Footurama/ftrm-basic.git#066a9674ef9871cc72946a54824ab3be46c0bab8",
+    "ftrm-basic": "git+https://github.com/Footurama/ftrm-basic.git#85844a059bee6520bb103cfcb06dc3b356a561a0",
     "qsem": "^1.0.0"
   },
   "devDependencies": {},
