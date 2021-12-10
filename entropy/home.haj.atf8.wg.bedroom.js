@@ -86,13 +86,17 @@ module.exports = [
 	[require('ftrm-basic/scheduler'), {
 		name: 'room-setpoint-scheduler',
 		input: [
+			'home.haj.atf8.wg.bedroom.media.speaker.currentlyPlaying',
 			'user.jue.present.atf8',
 			'user.fpi.present.atf8',
 			`${BASE}.window.openedRecently`
 		],
 		output: `${BASE}.room.desiredTemperature_degC.schedule`,
 		interval: 60000 * 5,
-		schedule: (now, presentJue, presentFpi, windowOpenedRecently) => {
+		schedule: (now, speakerPlaying, presentJue, presentFpi, windowOpenedRecently) => {
+			// Speakers are playing music ...
+			if (speakerPlaying) return 19;
+
 			// Nobody's home -> just keep base temp
 			if (!presentJue && !presentFpi) return 12;
 
