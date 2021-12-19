@@ -110,13 +110,24 @@ module.exports = [
 		weight: 'prio'
 	}],
 
-	// Peripheral relay
+	// Monitors:
+	// - relay
 	[require('../_lib/homieRelay.js'), {
-		name: 'periph-relay',
-		input: `${BASE}.inUse`,
-		output: `${BASE}.slave.actualOnState`,
+		name: 'monitor-relay',
+		input: `${BASE}.monitor.desiredOnState`,
+		output: `${BASE}.monitor.actualOnState`,
 		hdpClient,
 		cpuid: '03001f000c434b5237363620',
 		relayName: 'CH0'
+	}],
+	// - react to in-use switch
+	[require('ftrm-basic/edge-detection'), {
+		name: 'monitor-inuse-edge',
+		input: `${BASE}.inUse`,
+		output: `${BASE}.monitor.desiredOnState`,
+		detectors: [
+			{match: 'rising-edge', output: true},
+			{match: 'falling-edge', output: false},
+		]
 	}],
 ];
