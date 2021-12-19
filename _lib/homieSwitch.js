@@ -25,7 +25,7 @@ async function factory (opts, inputs, outputs) {
 	};
 
 	// Set initial state
-	setState(opts.defaultState);
+	if (opts.defaultState !== undefined) setState(opts.defaultState);
 	function setState (_state) {
 		// Ensure state is a boolean and store it globaly
 		_state = !!_state;
