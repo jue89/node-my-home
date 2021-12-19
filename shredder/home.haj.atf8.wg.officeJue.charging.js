@@ -34,15 +34,12 @@ module.exports = [
 	}],
 
 	// Relay
-	[require('../_lib/shellyPlug.js'), {
+	[require('../_lib/homieRelay.js'), {
 		name: 'charging-relay',
-		input: {
-			'Relay': `${BASE}.desiredOnState`
-		},
-		output: {
-			'Relay': `${BASE}.actualOnState`
-		},
-		readbackInterval: 60 * 1000,
-		...secrets.shelly.charging
-	}]
+		input: `${BASE}.desiredOnState`,
+		output: `${BASE}.actualOnState`,
+		hdpClient,
+		cpuid: '03001f000c434b5237363620',
+		relayName: 'CH3'
+	}],
 ];

@@ -111,18 +111,12 @@ module.exports = [
 	}],
 
 	// Peripheral relay
-	[require('../_lib/shellyPlug.js'), {
+	[require('../_lib/homieRelay.js'), {
 		name: 'periph-relay',
-		input: {
-			'Relay': `${BASE}.inUse`
-		},
-		output: {
-			'Relay': `${BASE}.slave.actualOnState`,
-			'Power': `${BASE}.slave.activePower_W`,
-			'ApparentPower': `${BASE}.slave.apparentPower_VA`,
-			'ReactivePower': `${BASE}.slave.reactivePower_var`
-		},
-		powerReadoutInterval: 20 * 1000,
-		...secrets.shelly.pcJueSlave
+		input: `${BASE}.inUse`,
+		output: `${BASE}.slave.actualOnState`,
+		hdpClient,
+		cpuid: '03001f000c434b5237363620',
+		relayName: 'CH0'
 	}],
 ];
