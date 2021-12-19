@@ -42,6 +42,25 @@ module.exports = [
 		]
 	}],
 
+	// Video lights
+	// - relay
+	[require('../_lib/homieRelay.js'), {
+		name: 'desk-lamp-relay',
+		input: `${BASE}.keyLight.desiredOnState`,
+		output: `${BASE}.keyLight.actualOnState`,
+		hdpClient,
+		cpuid: '0880260011434b5237363620',
+		relayName: 'CH0'
+	}],
+	[require('../_lib/homieRelay.js'), {
+		name: 'desk-lamp-relay',
+		input: `${BASE}.fillLight.desiredOnState`,
+		output: `${BASE}.fillLight.actualOnState`,
+		hdpClient,
+		cpuid: '0880260011434b5237363620',
+		relayName: 'CH1'
+	}],
+
 	// Printer
 	[require('../_lib/homieSwitch.js'), {
 		name: 'printer-switch',
