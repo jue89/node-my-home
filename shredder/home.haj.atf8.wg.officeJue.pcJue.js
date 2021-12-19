@@ -45,7 +45,7 @@ module.exports = [
 	// - Keep track of the PC relay
 	[require('ftrm-basic/edge-detection'), {
 		name: 'inuse-edge-pc',
-		input: `${BASE}.master.actualOnState`,
+		input: `${BASE}.pc.actualOnState`,
 		output: `${BASE}.inUse`,
 		detectors: [
 			// - Read back last in-use state on start by looking at the PC relay
@@ -61,13 +61,13 @@ module.exports = [
 	[require('../_lib/shellyPlug.js'), {
 		name: 'pc-relay',
 		input: {
-			'Relay': `${BASE}.master.desiredOnState`
+			'Relay': `${BASE}.pc.desiredOnState`
 		},
 		output: {
-			'Relay': `${BASE}.master.actualOnState`,
-			'Power': `${BASE}.master.activePower_W`,
-			'ApparentPower': `${BASE}.master.apparentPower_VA`,
-			'ReactivePower': `${BASE}.master.reactivePower_var`
+			'Relay': `${BASE}.pc.actualOnState`,
+			'Power': `${BASE}.pc.activePower_W`,
+			'ApparentPower': `${BASE}.pc.apparentPower_VA`,
+			'ReactivePower': `${BASE}.pc.reactivePower_var`
 		},
 		powerReadoutInterval: 20 * 1000,
 		...secrets.shelly.pcJueMaster
@@ -75,8 +75,8 @@ module.exports = [
 	// - Keep on if it consumes power
 	[require('ftrm-basic/map'), {
 		name: 'pc-switch-power',
-		input: `${BASE}.master.activePower_W`,
-		output: `${BASE}.master.desiredOnState.power`,
+		input: `${BASE}.pc.activePower_W`,
+		output: `${BASE}.pc.desiredOnState.power`,
 		// true -> Keep power on; undefined -> Ask someone else ...
 		map: (pwr) => (pwr > 30) ? true : undefined
 	}],
@@ -84,7 +84,7 @@ module.exports = [
 	[require('ftrm-basic/edge-detection'), {
 		name: 'pc-inuse-edge',
 		input: `${BASE}.inUse`,
-		output: `${BASE}.master.desiredOnState.switch`,
+		output: `${BASE}.pc.desiredOnState.switch`,
 		detectors: [
 			{match: 'rising-edge', output: true}
 		]
@@ -92,20 +92,20 @@ module.exports = [
 	// - Override homekit button
 	[require('ftrm-homekit')('Switch'), {
 		name: 'pc-switch-override',
-		output: { 'On': `${BASE}.master.desiredOnState.override` },
+		output: { 'On': `${BASE}.pc.desiredOnState.override` },
 		displayName: 'PC Override'
 	}],
 	// - Find the desired on state
 	[require('ftrm-basic/select'), {
 		name: 'pc-switch',
 		input: [
-			{pipe: `${BASE}.master.desiredOnState.switch`, expire: 50 * 1000, logLevelExpiration: null},
-			{pipe: `${BASE}.master.desiredOnState.power`, expire: 90 * 1000},
-			{pipe: `${BASE}.master.desiredOnState.override`},
+			{pipe: `${BASE}.pc.desiredOnState.switch`, expire: 50 * 1000, logLevelExpiration: null},
+			{pipe: `${BASE}.pc.desiredOnState.power`, expire: 90 * 1000},
+			{pipe: `${BASE}.pc.desiredOnState.override`},
 			{value: false}
 		],
 		output: [
-			{pipe: `${BASE}.master.desiredOnState`, throttle: 10 * 60 * 1000}
+			{pipe: `${BASE}.pc.desiredOnState`, throttle: 10 * 60 * 1000}
 		],
 		weight: 'prio'
 	}],
