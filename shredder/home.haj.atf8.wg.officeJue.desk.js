@@ -73,4 +73,22 @@ module.exports = [
 		brightnessOff: [128, 0, 0],
 		brightnessOn: [0, 255, 0],
 	}],
+
+	// Tools
+	// - relay
+	[require('../_lib/homieRelay.js'), {
+		name: 'speaker-relay',
+		input: `${BASE}.tools.desiredOnState`,
+		output: `${BASE}.tools.actualOnState`,
+		hdpClient,
+		cpuid: '03001f000c434b5237363620',
+		relayName: 'CH2'
+	}],
+	// - homekit button
+	[require('ftrm-homekit')('Switch'), {
+		name: 'speaker-homekit',
+		input: { 'On': `${BASE}.tools.actualOnState` },
+		output: { 'On': `${BASE}.tools.desiredOnState` },
+		displayName: 'Tools'
+	}],
 ];
