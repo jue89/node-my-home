@@ -130,4 +130,43 @@ module.exports = [
 			{match: 'falling-edge', output: false},
 		]
 	}],
+
+	// Speaker:
+	// - relay
+	[require('../_lib/homieRelay.js'), {
+		name: 'speaker-relay',
+		input: `${BASE}.speaker.desiredOnState`,
+		output: `${BASE}.speaker.actualOnState`,
+		hdpClient,
+		cpuid: '03001f000c434b5237363620',
+		relayName: 'CH1'
+	}],
+	// - react to in-use switch
+	[require('ftrm-basic/edge-detection'), {
+		name: 'speaker-inuse-edge',
+		input: `${BASE}.inUse`,
+		output: `${BASE}.speaker.desiredOnState`,
+		detectors: [
+			{match: 'falling-edge', output: false},
+		]
+	}],
+	// - homekit button
+	[require('ftrm-homekit')('Switch'), {
+		name: 'speaker-homekit',
+		input: { 'On': `${BASE}.speaker.actualOnState` },
+		output: { 'On': `${BASE}.speaker.desiredOnState` },
+		displayName: 'Speaker'
+	}],
+	// - Homie switch at the desk
+	[require('../_lib/homieSwitch.js'), {
+		name: 'speaker-switch-desk',
+		input: `${BASE}.speaker.actualOnState`,
+		output: `${BASE}.speaker.desiredOnState`,
+		hdpClient,
+		cpuid: '37ffd3054d53313911752243',
+		btnName: 'BTN0',
+		ledName: 'LED0',
+		brightnessOff: [128, 0, 0],
+		brightnessOn: [0, 255, 0],
+	}],
 ];
