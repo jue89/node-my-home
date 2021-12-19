@@ -38,7 +38,7 @@ module.exports = [
 		input: 'home.haj.atf8.wg.officeJue.pcJue.inUse',
 		output: `${BASE}.deskLamp.desiredOnState`,
 		detectors: [
-			{match: (from, to) => from === true && to === false, output: false}
+			{match: (from, to) => from === true && to === false, delay: 30 * 1000, output: false}
 		]
 	}],
 
