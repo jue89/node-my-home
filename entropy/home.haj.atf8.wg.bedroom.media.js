@@ -25,4 +25,15 @@ module.exports = [
 			{match: 'falling-edge', output: false, delay: 3 * 60 * 1000},
 		]
 	}],
+
+	// HTTP API for media player to turn on the TV
+	[require('ftrm-http/server'), {
+		output: [
+			{name: 'tv/onState', pipe: `${BASE}.tv.desiredOnState`, convert: 'boolean'}
+		],
+		input: [
+			{name: 'tv/onState', pipe: `${BASE}.tv.actualOnState`}
+		],
+		port: 80
+	}],
 ]

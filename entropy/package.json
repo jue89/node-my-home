@@ -4,6 +4,7 @@
     "ftrm-ctrl": "git+https://github.com/Footurama/ftrm-ctrl.git#8b79f1141e04fc569c55ee02b343dea51363093d",
     "ftrm-gpio": "git+https://github.com/Footurama/ftrm-gpio.git#025ea02d71219b3f7fccc75870cd15e4e2eacaef",
     "ftrm-homekit": "git+https://github.com/Footurama/ftrm-homekit.git#c64fe512c1544fe3cd2e37814c27a0539aa0f92c",
+    "ftrm-http": "0.0.0",
     "ftrm-sensors": "0.0.0",
     "ftrm-tracking": "git+https://github.com/Footurama/ftrm-tracking.git#17e2689f937519a64ac59e5538e61295476fdcb4",
     "linterpol": "^1.0.0",
