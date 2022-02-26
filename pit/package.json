@@ -1,6 +1,7 @@
 {
   "name": "pit",
   "dependencies": {
-    "ftrm-sensors": "^0.0.0"
+    "ftrm-sensors": "^0.0.0",
+    "onoff": "^6.0.3"
   }
 }
