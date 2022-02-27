@@ -1,10 +1,10 @@
 {
   "name": "curiosity",
   "dependencies": {
+    "ftrm-homekit": "git+https://github.com/Footurama/ftrm-homekit.git#c98adf6056e35c1407db8d968aecbbff2da7cc10",
     "ftrm-http": "0.0.0",
     "ftrm-inspector": "git+https://github.com/Footurama/ftrm-inspector.git#299bc61a1f1ba7e54249e853661353b16465ad6e",
     "ftrm-tracking": "git+https://github.com/Footurama/ftrm-tracking.git#17e2689f937519a64ac59e5538e61295476fdcb4",
-    "ftrm-homekit": "git+https://github.com/Footurama/ftrm-homekit.git#c64fe512c1544fe3cd2e37814c27a0539aa0f92c",
     "tsfoo": "git+https://github.com/jue89/node-tsfoo.git#11f73f7e17807321417d58a814c1720a35bcf591",
     "yamaha-nodejs": "^0.9.6"
   }
