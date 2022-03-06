@@ -1,4 +1,4 @@
-const spi = require('spi');
+const spi = require('spi-device');
 const linterpol = require('linterpol');
 
 function hsl2rgb (hue, saturation, lightness) {
@@ -56,15 +56,20 @@ module.exports = [
 		input: 'home.haj.atf8.sj.electricitymeter.avgPowerPerWeek_W',
 		factory: (i, o) => {
 			// Open SPI device
-			const leds = new spi.Spi('/dev/spidev1.0');
-			leds.open();
+			const leds = new spi.openSync(1, 0);
 
 			i[0].on('change', (p) => {
 				const hue = linterpol(p, power2hue);
 				const color = hsl2rgb(hue, 1, 0.05);
-				const spiData = color.concat(color, color, color);
-				leds.write(Buffer.from(spiData));
+				const spiData = Buffer.from(color.concat(color, color, color));
+				leds.transfer([{
+					byteLength: spiData.length,
+					sendBuffer: spiData,
+					speedHz: 500000
+				}], () => {});
 			});
+
+			return () => leds.closeSync();
 		}
 	}]
 ];
