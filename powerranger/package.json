@@ -1,7 +1,7 @@
 {
   "name": "powerranger",
   "dependencies": {
-    "ftrm-homekit": "git+https://github.com/Footurama/ftrm-homekit.git#c64fe512c1544fe3cd2e37814c27a0539aa0f92c",
+    "ftrm-homekit": "git+https://github.com/Footurama/ftrm-homekit.git#c98adf6056e35c1407db8d968aecbbff2da7cc10",
     "ftrm-sensors": "0.0.0",
     "linterpol": "^1.0.0",
     "spi": "^0.2.0"
