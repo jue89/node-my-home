@@ -5,7 +5,7 @@ module.exports = [
 	[require('ftrm-sensors/w1therm'), {
 		name: 'room-temp',
 		output: `${BASE}.actualTemperature_degC`,
-		sensorSerial: '10-000803708be1',
+		sensorSerial: '10-00080370cce1',
 		interval: 20000
 	}],
 ];
