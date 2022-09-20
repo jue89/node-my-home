@@ -103,7 +103,7 @@ module.exports = [
 			// Build schedule:
 			const time = now.m / 60 + now.h;
 			const tempNight = 16;
-			const tempDay = 17;
+			const tempDay = 16;
 			const tempSleepy = 19;
 			const schedule = (now.dayofweek >= 6) ? [
 				// Weekend

@@ -137,7 +137,7 @@ module.exports = [
 			// Get temperatues
 			if (presentJue) distance = 0;
 			const tempDay = linterpol(distance, [
-				[  100, 18],
+				[  100, 16],
 				[ 4100, 16],
 				[80000, 12]
 			]);
