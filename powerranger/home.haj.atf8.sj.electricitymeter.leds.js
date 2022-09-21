@@ -46,8 +46,8 @@ function hsl2rgb (hue, saturation, lightness) {
 };
 
 const power2hue = [
-	[240, 120],
-	[270,   0]
+	[260, 120],
+	[300,   0]
 ];
 
 module.exports = [
