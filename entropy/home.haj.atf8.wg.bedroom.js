@@ -95,7 +95,7 @@ module.exports = [
 		interval: 60000 * 5,
 		schedule: (now, speakerPlaying, presentJue, presentFpi, windowOpenedRecently) => {
 			// Speakers are playing music ...
-			if (speakerPlaying) return 19;
+			if (speakerPlaying) return 18;
 
 			// Nobody's home -> just keep base temp
 			if (!presentJue && !presentFpi) return 12;
@@ -104,24 +104,24 @@ module.exports = [
 			const time = now.m / 60 + now.h;
 			const tempNight = 16;
 			const tempDay = 16;
-			const tempSleepy = 19;
+			const tempSleepy = 18;
 			const schedule = (now.dayofweek >= 6) ? [
 				// Weekend
 				[ 8, tempNight],
 				[ 9, windowOpenedRecently ? tempDay : tempSleepy],
 				[11, windowOpenedRecently ? tempDay : tempSleepy],
 				[12, tempDay],
-				[20, tempDay],
+				[19, tempDay],
 				[21, tempSleepy],
 				[23, tempSleepy],
 				[ 0, tempNight],
 			] : [
 				// Week day
-				[ 6, tempNight],
+				[ 5, tempNight],
 				[ 7, windowOpenedRecently ? tempDay : tempSleepy],
-				[10, windowOpenedRecently ? tempDay : tempSleepy],
-				[11, tempDay],
-				[20, tempDay],
+				[ 9, windowOpenedRecently ? tempDay : tempSleepy],
+				[10, tempDay],
+				[19, tempDay],
 				[21, tempSleepy],
 				[23, tempSleepy],
 				[ 0, tempNight],

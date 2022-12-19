@@ -130,7 +130,7 @@ module.exports = [
 		interval: 60000 * 5,
 		schedule: (now, presentJue, distance, pcInUse) => {
 			// Don't turn the heating down when someone is sitting in front of the PC
-			if (pcInUse) return 19;
+			if (pcInUse) return 18;
 
 			const time = now.m / 60 + now.h;
 
@@ -152,8 +152,8 @@ module.exports = [
 				[ 0, tempNight],
 			] : [
 				// Week day
-				[ 8, tempNight],
-				[ 9, tempDay],
+				[ 9, tempNight],
+				[10, tempDay],
 				[22, tempDay],
 				[23, tempNight],
 			];
