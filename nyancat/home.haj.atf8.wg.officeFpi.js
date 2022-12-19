@@ -87,7 +87,7 @@ module.exports = [
 		interval: 60000 * 5,
 		schedule: (now, presentJue, presentFpi, pc) => {
 			// Someone is sitting in front of the PC -> room stays warm
-			if (pc) return 19.5;
+			if (pc) return 18;
 
 			// Nobody's home -> just keep base temp
 			if (!presentJue && !presentFpi) return 12;
@@ -95,19 +95,19 @@ module.exports = [
 			// Build schedule:
 			const time = now.m / 60 + now.h;
 			const tempNight = 15;
-			const tempDay = 18;
+			const tempDay = 17;
 			const schedule = (now.dayofweek >= 6) ? [
 				// Weekend
 				[ 9, tempNight],
-				[10, tempDay],
-				[23, tempDay],
-				[ 0, tempNight],
+				[11, tempDay],
+				[22, tempDay],
+				[23, tempNight],
 			] : [
 				// Week day
-				[ 7, tempNight],
-				[ 8, tempDay],
-				[21, tempDay],
-				[22, tempNight],
+				[ 8, tempNight],
+				[10, tempDay],
+				[20, tempDay],
+				[21, tempNight],
 			];
 
 			return linterpol(time, schedule, 24);
