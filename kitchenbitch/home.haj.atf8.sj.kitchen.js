@@ -97,7 +97,7 @@ module.exports = [
 		],
 		output: 'home.haj.atf8.sj.kitchen.room.desiredTemperature_degC.schedule',
 		interval: 60000 * 5,
-		schedule: (now, jue, fpi, airplay) => {
+		schedule: (now, presentJue, presentFpi, airplay) => {
 			if (airplay) return 16;
 			if (!presentJue && !presentFpi) return 12;
 			const tempNight = 12;
