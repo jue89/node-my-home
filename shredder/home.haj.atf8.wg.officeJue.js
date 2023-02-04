@@ -138,7 +138,7 @@ module.exports = [
 			if (presentJue) distance = 0;
 			const tempDay = linterpol(distance, [
 				[  100, 16],
-				[ 4100, 16],
+				[ 4100, 14],
 				[80000, 12]
 			]);
 			const tempNight = 12;
