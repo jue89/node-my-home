@@ -43,15 +43,6 @@ module.exports = [
 		displayName: 'Window'
 	}],
 
-	// Actors:
-	// - radiator valve
-	[require('ftrm-gpio/out'), {
-		name: 'radiator-valve',
-		input: [{pipe: 'home.haj.atf8.sj.kitchen.radiator.open', expire: 60000}],
-		gpio: 22,
-		default: false
-	}],
-
 	// Setpoint:
 	// - select
 	[require('ftrm-basic/select'), {
